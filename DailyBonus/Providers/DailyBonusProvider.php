@@ -10,6 +10,7 @@ class DailyBonusProvider extends ModuleServiceProvider
 
     public function boot(\DI\Container $container): void
     {
+        $this->loadViews('Resources/views', 'dailybonus');
         $this->bootstrapModule();
     }
 }
