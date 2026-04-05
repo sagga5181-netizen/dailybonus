@@ -3,7 +3,6 @@
 namespace Flute\Modules\DailyBonus\Providers;
 
 use Flute\Core\Support\ModuleServiceProvider;
-use Flute\Core\Modules\Page\Services\WidgetManager;
 
 class DailyBonusProvider extends ModuleServiceProvider
 {
@@ -15,9 +14,9 @@ class DailyBonusProvider extends ModuleServiceProvider
         $this->bootstrapModule();
     }
 
-    public function registerWidgets(): void
+    public function registerWidgets(array $widgets): array
     {
-        $widgetManager = app(WidgetManager::class);
-        $widgetManager->registerWidget('daily_bonus', \Flute\Modules\DailyBonus\Widgets\DailyBonusWidget::class);
+        $widgets['daily_bonus'] = \Flute\Modules\DailyBonus\Widgets\DailyBonusWidget::class;
+        return $widgets;
     }
 }
