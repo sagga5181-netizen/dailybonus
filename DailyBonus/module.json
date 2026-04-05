@@ -1,0 +1,17 @@
+{
+    "name": "DailyBonus",
+    "version": "1.0.0",
+    "description": "Ежедневный бонус - виджет для получения ежедневных бонусов по дням",
+    "authors": ["Flute CMS"],
+    "url": "https://flute-cms.com",
+    "providers": [
+        {
+            "class": "Flute\\Modules\\DailyBonus\\Providers\\DailyBonusProvider",
+            "order": 10
+        }
+    ],
+    "dependencies": {
+        "php": ">=8.2",
+        "flute": ">=1.0.0"
+    }
+}
