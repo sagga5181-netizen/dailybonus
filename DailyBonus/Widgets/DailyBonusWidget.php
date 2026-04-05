@@ -180,7 +180,7 @@ class DailyBonusWidget implements WidgetInterface
      */
     public function getCategory(): string
     {
-        return 'rewards';
+        return 'content';
     }
 
     /**
