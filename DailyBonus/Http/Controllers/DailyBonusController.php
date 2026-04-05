@@ -13,7 +13,7 @@ class DailyBonusController extends BaseController
         if (!user()->isLoggedIn()) {
             return response()->json([
                 'success' => false,
-                'message' => __('dailybonus.errors.not_logged_in')
+                'message' => 'Please log in to claim your bonus'
             ]);
         }
 
@@ -27,7 +27,7 @@ class DailyBonusController extends BaseController
             if ($lastClaimDate >= $todayStart) {
                 return response()->json([
                     'success' => false,
-                    'message' => __('dailybonus.errors.already_claimed')
+                    'message' => 'You have already claimed your bonus today'
                 ]);
             }
         }
@@ -42,7 +42,7 @@ class DailyBonusController extends BaseController
 
         return response()->json([
             'success' => true,
-            'message' => __('dailybonus.success.claimed'),
+            'message' => 'Bonus successfully claimed!',
             'data' => [
                 'claim_count' => $claimCount,
                 'total_claimed' => $totalClaimed,

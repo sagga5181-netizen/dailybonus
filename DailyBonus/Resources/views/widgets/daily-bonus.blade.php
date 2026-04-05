@@ -3,16 +3,16 @@
     <div class="widget-header">
         <h3 class="widget-title">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            {{ __('dailybonus.title') }}
+            Daily Bonus
         </h3>
     </div>
 
     <div class="widget-body">
         @if(!$userBonus['isLoggedIn'])
             <div class="daily-bonus-guest">
-                <p class="text-center text-muted">{{ __('dailybonus.please_login') }}</p>
+                <p class="text-center text-muted">Log in to receive daily bonuses</p>
                 <a href="{{ route('login') }}" class="btn btn-primary w-100">
-                    {{ __('dailybonus.login') }}
+                    Login
                 </a>
             </div>
         @else
@@ -22,13 +22,13 @@
                     <div class="col-6">
                         <div class="stat-item">
                             <span class="stat-value">{{ $userBonus['claimCount'] ?? 0 }}</span>
-                            <span class="stat-label">{{ __('dailybonus.days_claimed') }}</span>
+                            <span class="stat-label">Days Claimed</span>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-item">
                             <span class="stat-value">{{ $userBonus['totalClaimed'] ?? 0 }}</span>
-                            <span class="stat-label">{{ __('dailybonus.total_received') }}</span>
+                            <span class="stat-label">Total Received</span>
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                                 </div>
                             @elseif($isCurrent)
                                 <div class="day-status current-badge">
-                                    {{ __('dailybonus.today') }}
+                                    Today
                                 </div>
                             @endif
                         </div>
@@ -65,19 +65,19 @@
                 @if($userBonus['canClaim'])
                     <button type="button" class="btn btn-success btn-claim w-100" onclick="claimDailyBonus()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                        {{ __('dailybonus.claim_bonus') }}
+                        Claim Bonus
                     </button>
                 @else
                     @if($showTimer && isset($userBonus['nextClaimTime']))
                         <div class="countdown-wrapper text-center">
-                            <p class="text-muted mb-2">{{ __('dailybonus.next_bonus_in') }}</p>
+                            <p class="text-muted mb-2">Next bonus in:</p>
                             <div class="countdown-timer" data-time="{{ $userBonus['nextClaimTime'] }}">
                                 <span class="hours">00</span>:<span class="minutes">00</span>:<span class="seconds">00</span>
                             </div>
                         </div>
                     @else
                         <button type="button" class="btn btn-secondary w-100" disabled>
-                            {{ __('dailybonus.come_back_tomorrow') }}
+                            Come back tomorrow
                         </button>
                     @endif
                 @endif
@@ -263,7 +263,7 @@ function claimDailyBonus() {
         }
     })
     .catch(error => {
-        showNotification('{{ __("dailybonus.errors.error") }}', 'error');
+        showNotification('An error occurred', 'error');
     });
 }
 

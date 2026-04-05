@@ -11,7 +11,7 @@ class DailyBonusWidget implements WidgetInterface
      */
     public function getName(): string
     {
-        return __('dailybonus.widget_name');
+        return 'Daily Bonus';
     }
 
     /**
@@ -30,26 +30,26 @@ class DailyBonusWidget implements WidgetInterface
         return [
             'bonus_amount' => [
                 'type' => 'number',
-                'label' => __('dailybonus.settings.bonus_amount'),
+                'label' => 'Bonus Amount',
                 'default' => 100,
                 'min' => 1,
                 'max' => 10000,
             ],
             'days_count' => [
                 'type' => 'number',
-                'label' => __('dailybonus.settings.days_count'),
+                'label' => 'Number of Days',
                 'default' => 7,
                 'min' => 3,
                 'max' => 30,
             ],
             'multiplier_mode' => [
                 'type' => 'boolean',
-                'label' => __('dailybonus.settings.multiplier_mode'),
+                'label' => 'Multiplier Mode',
                 'default' => false,
             ],
             'show_timer' => [
                 'type' => 'boolean',
-                'label' => __('dailybonus.settings.show_timer'),
+                'label' => 'Show Timer',
                 'default' => true,
             ],
         ];
@@ -217,9 +217,7 @@ class DailyBonusWidget implements WidgetInterface
      */
     public function renderSettingsForm(array $settings): string|bool
     {
-        return view('dailybonus::widgets.daily-bonus-settings', [
-            'settings' => $settings,
-        ])->render();
+        return false;
     }
 
     /**
@@ -229,7 +227,7 @@ class DailyBonusWidget implements WidgetInterface
     {
         return [
             [
-                'title' => __('dailybonus.actions.claim'),
+                'title' => 'Claim Bonus',
                 'action' => 'claim_bonus',
                 'icon' => 'gift',
             ],
@@ -245,7 +243,7 @@ class DailyBonusWidget implements WidgetInterface
             return $this->processClaim();
         }
 
-        return ['success' => false, 'message' => __('dailybonus.errors.unknown_action')];
+        return ['success' => false, 'message' => 'Unknown action'];
     }
 
     /**
@@ -256,7 +254,7 @@ class DailyBonusWidget implements WidgetInterface
         if (!user()->isLoggedIn()) {
             return [
                 'success' => false, 
-                'message' => __('dailybonus.errors.not_logged_in')
+                'message' => 'Please log in to claim your bonus'
             ];
         }
 
@@ -270,7 +268,7 @@ class DailyBonusWidget implements WidgetInterface
             if ($lastClaimDate >= $todayStart) {
                 return [
                     'success' => false, 
-                    'message' => __('dailybonus.errors.already_claimed')
+                    'message' => 'You have already claimed your bonus today'
                 ];
             }
         }
@@ -285,7 +283,7 @@ class DailyBonusWidget implements WidgetInterface
 
         return [
             'success' => true,
-            'message' => __('dailybonus.success.claimed'),
+            'message' => 'Bonus successfully claimed!',
             'data' => [
                 'claim_count' => $claimCount,
                 'total_claimed' => $totalClaimed,
