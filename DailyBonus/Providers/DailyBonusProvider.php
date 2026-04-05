@@ -15,7 +15,7 @@ class DailyBonusProvider extends ModuleServiceProvider
         $this->bootstrapModule();
     }
 
-    protected function registerWidgets(): void
+    public function registerWidgets(): void
     {
         $widgetManager = app(WidgetManager::class);
         $widgetManager->registerWidget('daily_bonus', \Flute\Modules\DailyBonus\Widgets\DailyBonusWidget::class);
