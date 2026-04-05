@@ -1,8 +1,11 @@
 <?php
 
+
 namespace Flute\Modules\DailyBonus\Widgets;
 
+
 use Flute\Core\Modules\Page\Widgets\Contracts\WidgetInterface;
+
 use Flute\Modules\DailyBonus\Database\Entities\UserBonus;
 
 class DailyBonusWidget implements WidgetInterface
@@ -53,7 +56,7 @@ class DailyBonusWidget implements WidgetInterface
         ];
     }
 
-    public function render(array $settings): string|null
+    public function render(array $settings): ?string
     {
         $daysCount = (int)($settings['days_count'] ?? 7);
         $bonusAmount = (float)($settings['bonus_amount'] ?? 100);
@@ -144,14 +147,44 @@ class DailyBonusWidget implements WidgetInterface
         ];
     }
 
-    public function hasSettings(): bool
+    public function renderSettingsForm(array $settings): string|bool
+    {
+        return view('dailybonus::settings-form', ['settings' => $settings])->render();
+    }
+
+    public function validateSettings(array $input): true|array
     {
         return true;
+    }
+
+    public function saveSettings(array $input): array
+    {
+        return $input;
     }
 
     public function getDefaultWidth(): int
     {
         return 4;
+    }
+
+    public function getMinWidth(): int
+    {
+        return 3;
+    }
+
+    public function hasSettings(): bool
+    {
+        return true;
+    }
+
+    public function getButtons(): array
+    {
+        return [];
+    }
+
+    public function handleAction(string $action, ?string $widgetId = null): array
+    {
+        return ['success' => false, 'message' => 'Unknown action'];
     }
 
     public function getCategory(): string
