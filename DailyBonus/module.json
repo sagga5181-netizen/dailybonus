@@ -1,7 +1,7 @@
 {
     "name": "DailyBonus",
     "version": "1.0.0",
-    "description": "Ежедневный бонус - виджет для получения ежедневных бонусов по дням",
+    "description": "Daily bonus widget - receive daily bonuses by day",
     "authors": ["Flute CMS"],
     "url": "https://flute-cms.com",
     "providers": [
