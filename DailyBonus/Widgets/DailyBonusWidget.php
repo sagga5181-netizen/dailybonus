@@ -11,7 +11,7 @@ class DailyBonusWidget implements WidgetInterface
      */
     public function getName(): string
     {
-        return 'Daily Bonus';
+        return 'Ежедневный бонус';
     }
 
     /**
@@ -30,67 +30,37 @@ class DailyBonusWidget implements WidgetInterface
         return [
             'bonus_amount' => [
                 'type' => 'number',
-                'label' => 'Bonus Amount',
+                'label' => 'Сумма бонуса',
                 'default' => 100,
                 'min' => 1,
                 'max' => 10000,
             ],
             'days_count' => [
                 'type' => 'number',
-                'label' => 'Number of Days',
+                'label' => 'Количество дней',
                 'default' => 7,
                 'min' => 3,
                 'max' => 30,
             ],
             'multiplier_mode' => [
                 'type' => 'boolean',
-                'label' => 'Multiplier Mode',
+                'label' => 'Режим множителя',
                 'default' => false,
+            ],
+            'day_rewards' => [
+                'type' => 'textarea',
+                'label' => 'Награды по дням',
+                'default' => '{"1":100,"2":100,"3":100,"4":100,"5":100,"6":100,"7":100}',
+                'placeholder' => '{"1":100,"2":200,"3":300}',
             ],
             'show_timer' => [
                 'type' => 'boolean',
-                'label' => 'Show Timer',
+                'label' => 'Показывать таймер',
                 'default' => true,
             ],
         ];
     }
 
-    /**
-     * Отрисовка виджета
-     */
-    public function render(array $settings): string|null
-    {
-        $daysCount = (int)($settings['days_count'] ?? 7);
-        $bonusAmount = (float)($settings['bonus_amount'] ?? 100);
-        $multiplierMode = (bool)($settings['multiplier_mode'] ?? false);
-        $showTimer = (bool)($settings['show_timer'] ?? true);
-
-        // Генерируем данные о днях
-        $bonusDays = $this->generateBonusDays($daysCount, $bonusAmount, $multiplierMode);
-
-        // Получаем текущий статус пользователя
-        $userBonus = $this->getUserBonusStatus();
-
-        return view('dailybonus::widgets.daily-bonus', [
-            'bonusDays' => $bonusDays,
-            'userBonus' => $userBonus,
-            'settings' => $settings,
-            'showTimer' => $showTimer,
-        ])->render();
-    }
-
-    /**
-     * Генерация данных о днях бонуса
-     */
-    protected function generateBonusDays(int $daysCount, float $baseAmount, bool $multiplierMode): array
-    {
-        $days = [];
-        
-        for ($day = 1; $day <= $daysCount; $day++) {
-            $amount = $multiplierMode ? $baseAmount * $day : $baseAmount;
-            
-            $days[] = [
-                'day' => $day,
                 'amount' => $amount,
                 'claimed' => false,
             ];
@@ -291,3 +261,58 @@ class DailyBonusWidget implements WidgetInterface
         ];
     }
 }
+    /**
+     * Отрисовка виджета
+     */
+    public function render(array $settings): string|null
+    {
+        $daysCount = (int)($settings['days_count'] ?? 7);
+        $bonusAmount = (float)($settings['bonus_amount'] ?? 100);
+        $multiplierMode = (bool)($settings['multiplier_mode'] ?? false);
+        $showTimer = (bool)($settings['show_timer'] ?? true);
+
+        // Парсим награды по дням из настроек
+        $dayRewards = [];
+        if (isset($settings['day_rewards']) && is_string($settings['day_rewards'])) {
+            $dayRewards = json_decode($settings['day_rewards'], true) ?? [];
+        }
+
+        // Генерируем данные о днях
+        $bonusDays = $this->generateBonusDays($daysCount, $bonusAmount, $multiplierMode, $dayRewards);
+
+        // Получаем текущий статус пользователя
+        $userBonus = $this->getUserBonusStatus();
+
+        return view('dailybonus::widgets.daily-bonus', [
+            'bonusDays' => $bonusDays,
+            'userBonus' => $userBonus,
+            'settings' => $settings,
+            'showTimer' => $showTimer,
+        ])->render();
+    }
+
+    /**
+     * Генерация данных о днях бонуса
+     */
+    protected function generateBonusDays(int $daysCount, float $baseAmount, bool $multiplierMode, array $dayRewards = []): array
+    {
+        $days = [];
+
+        for ($day = 1; $day <= $daysCount; $day++) {
+            // Используем награду из настроек если указана
+            $amount = $baseAmount;
+            if (!empty($dayRewards) && isset($dayRewards[$day])) {
+                $amount = (float) $dayRewards[$day];
+            } elseif ($multiplierMode) {
+                $amount = $baseAmount * $day;
+            }
+
+            $days[] = [
+                'day' => $day,
+                'amount' => $amount,
+                'claimed' => false,
+            ];
+        }
+
+        return $days;
+    }

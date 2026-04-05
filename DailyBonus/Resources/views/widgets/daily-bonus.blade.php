@@ -3,16 +3,16 @@
     <div class="widget-header">
         <h3 class="widget-title">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            Daily Bonus
+            {{ __('dailybonus.widget.title' }}
         </h3>
     </div>
 
     <div class="widget-body">
         @if(!$userBonus['isLoggedIn'])
             <div class="daily-bonus-guest">
-                <p class="text-center text-muted">Log in to receive daily bonuses</p>
+                <p class="text-center text-muted">{{ __('dailybonus.widget.login_required' }}</p>
                 <a href="{{ route('login') }}" class="btn btn-primary w-100">
-                    Login
+                    {{ __('dailybonus.widget.login' }}
                 </a>
             </div>
         @else
@@ -22,13 +22,13 @@
                     <div class="col-6">
                         <div class="stat-item">
                             <span class="stat-value">{{ $userBonus['claimCount'] ?? 0 }}</span>
-                            <span class="stat-label">Days Claimed</span>
+                            <span class="stat-label">{{ __('dailybonus.stats.days_claimed' }}</span>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-item">
-                            <span class="stat-value">{{ $userBonus['totalClaimed'] ?? 0 }}</span>
-                            <span class="stat-label">Total Received</span>
+                            <span class="stat-value">{{ number_format($userBonus['totalClaimed'] ?? 0, 0, ',', ' ') }}</span>
+                            <span class="stat-label">{{ __('dailybonus.stats.total_received' }}</span>
                         </div>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                                 </div>
                             @elseif($isCurrent)
                                 <div class="day-status current-badge">
-                                    Today
+                                    {{ __('dailybonus.today' }}
                                 </div>
                             @endif
                         </div>
@@ -65,19 +65,19 @@
                 @if($userBonus['canClaim'])
                     <button type="button" class="btn btn-success btn-claim w-100" onclick="claimDailyBonus()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                        Claim Bonus
+                        {{ __('dailybonus.claim' }}
                     </button>
                 @else
                     @if($showTimer && isset($userBonus['nextClaimTime']))
                         <div class="countdown-wrapper text-center">
-                            <p class="text-muted mb-2">Next bonus in:</p>
+                            <p class="text-muted mb-2">{{ __('dailybonus.next_bonus_in' }}</p>
                             <div class="countdown-timer" data-time="{{ $userBonus['nextClaimTime'] }}">
                                 <span class="hours">00</span>:<span class="minutes">00</span>:<span class="seconds">00</span>
                             </div>
                         </div>
                     @else
                         <button type="button" class="btn btn-secondary w-100" disabled>
-                            Come back tomorrow
+                            {{ __('dailybonus.come_back_tomorrow' }}
                         </button>
                     @endif
                 @endif
@@ -254,9 +254,7 @@ function claimDailyBonus() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Показываем успех
             showNotification(data.message, 'success');
-            // Перезагружаем виджет
             location.reload();
         } else {
             showNotification(data.message, 'error');
@@ -268,16 +266,14 @@ function claimDailyBonus() {
 }
 
 function showNotification(message, type) {
-    // Простая реализация уведомления
     alert(message);
 }
 
-// Таймер обратного отсчёта
 document.addEventListener('DOMContentLoaded', function() {
     const timer = document.querySelector('.countdown-timer');
     if (timer) {
         let time = parseInt(timer.dataset.time);
-        
+
         if (time > 0) {
             setInterval(function() {
                 time--;
@@ -285,11 +281,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     location.reload();
                     return;
                 }
-                
+
                 const hours = Math.floor(time / 3600);
                 const minutes = Math.floor((time % 3600) / 60);
                 const seconds = time % 60;
-                
+
                 timer.querySelector('.hours').textContent = String(hours).padStart(2, '0');
                 timer.querySelector('.minutes').textContent = String(minutes).padStart(2, '0');
                 timer.querySelector('.seconds').textContent = String(seconds).padStart(2, '0');
