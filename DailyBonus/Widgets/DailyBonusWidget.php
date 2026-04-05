@@ -60,10 +60,10 @@ class DailyBonusWidget implements WidgetInterface
      */
     public function render(array $settings): string|null
     {
-        $daysCount = $settings['days_count'] ?? 7;
-        $bonusAmount = $settings['bonus_amount'] ?? 100;
-        $multiplierMode = $settings['multiplier_mode'] ?? false;
-        $showTimer = $settings['show_timer'] ?? true;
+        $daysCount = (int)($settings['days_count'] ?? 7);
+        $bonusAmount = (float)($settings['bonus_amount'] ?? 100);
+        $multiplierMode = (bool)($settings['multiplier_mode'] ?? false);
+        $showTimer = (bool)($settings['show_timer'] ?? true);
 
         // Генерируем данные о днях
         $bonusDays = $this->generateBonusDays($daysCount, $bonusAmount, $multiplierMode);
