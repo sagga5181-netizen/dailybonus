@@ -71,7 +71,7 @@ class DailyBonusWidget implements WidgetInterface
         // Получаем текущий статус пользователя
         $userBonus = $this->getUserBonusStatus();
 
-        return view('DailyBonus::widgets.daily-bonus', [
+        return view('dailybonus::widgets.daily-bonus', [
             'bonusDays' => $bonusDays,
             'userBonus' => $userBonus,
             'settings' => $settings,
