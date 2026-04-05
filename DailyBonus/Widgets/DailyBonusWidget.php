@@ -70,7 +70,7 @@ class DailyBonusWidget implements WidgetInterface
     }
 
     /**
-     * Получение статуса бонусов пользователя
+     * Получение статуса бонусов пользователя из БД
      */
     protected function getUserBonusStatus(): array
     {
@@ -85,23 +85,25 @@ class DailyBonusWidget implements WidgetInterface
             ];
         }
 
-        // Получаем данные пользователя из сессии/БД
-        // Для демонстрации используем сессию
-        $lastClaim = session()->get('daily_bonus_last_claim');
-        $claimCount = session()->get('daily_bonus_claim_count', 0);
+        $userId = user()->getIdentity();
         
-        $currentDay = ($claimCount % 7) + 1;
-        $totalClaimed = session()->get('daily_bonus_total_claimed', 0);
+        // Получаем последнюю запись о бонусе
+        $lastBonus = UserBonus::select('*')
+            ->where('user_id', $userId)
+            ->orderBy('claimed_at', 'DESC')
+            ->first();
 
         // Проверяем, можно ли получить бонус
         $canClaim = true;
         $nextClaimTime = null;
+        $currentDay = 1;
+        $totalClaimed = 0;
 
-        if ($lastClaim) {
-            $lastClaimDate = new \DateTime($lastClaim);
+        if ($lastBonus) {
+            $lastClaimDate = new \DateTime($lastBonus->claimed_at);
             $today = new \DateTime();
             $todayStart = new \DateTime($today->format('Y-m-d') . ' 00:00:00');
-            
+
             if ($lastClaimDate >= $todayStart) {
                 $canClaim = false;
                 // Время до следующего дня
@@ -109,7 +111,21 @@ class DailyBonusWidget implements WidgetInterface
                 $tomorrowStart = new \DateTime($tomorrow->format('Y-m-d') . ' 00:00:00');
                 $nextClaimTime = $tomorrowStart->getTimestamp() - $today->getTimestamp();
             }
+            
+            $currentDay = $lastBonus->day_number + 1;
         }
+
+        // Считаем общее количество полученных бонусов
+        $allBonuses = UserBonus::select('*')
+            ->where('user_id', $userId)
+            ->all();
+        
+        $totalClaimed = 0;
+        foreach ($allBonuses as $bonus) {
+            $totalClaimed += $bonus->amount;
+        }
+
+        $claimCount = count($allBonuses);
 
         return [
             'isLoggedIn' => true,
@@ -120,8 +136,6 @@ class DailyBonusWidget implements WidgetInterface
             'claimCount' => $claimCount,
         ];
     }
-
-    /**
      * Есть ли у виджета настройки
      */
     public function hasSettings(): bool
