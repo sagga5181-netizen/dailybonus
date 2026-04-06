@@ -2,12 +2,12 @@
 
 namespace Flute\Modules\DailyRewards\Database\Entities;
 
-use Flute\Core\Database\Entities\BaseEntity;
-
+use Cycle\ActiveRecord\ActiveRecord;
 use Cycle\Annotated\Annotation\Column;
+use Cycle\Annotated\Annotation\Entity;
 
 #[Entity(table: 'daily_rewards')]
-class DailyReward extends BaseEntity
+class DailyReward extends ActiveRecord
 {
     #[Column(type: 'primary')]
     public int $id;
