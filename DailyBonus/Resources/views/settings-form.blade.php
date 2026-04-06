@@ -1,12 +1,11 @@
 <div class="daily-bonus-settings-form">
     <div class="setting-tabs">
         <div class="tab-header">
-            <button type="button" class="tab-link active" data-tab="tab-general">Основные</button>
-            <button type="button" class="tab-link" data-tab="tab-rewards">Награды</button>
-            <button type="button" class="tab-link" data-tab="tab-display">Оформление</button>
+            <button type="button" class="tab-link active" onclick="switchTab(this, 'tab-general')">Основные</button>
+            <button type="button" class="tab-link" onclick="switchTab(this, 'tab-rewards')">Награды</button>
+            <button type="button" class="tab-link" onclick="switchTab(this, 'tab-display')">Оформление</button>
         </div>
         <div class="tab-content">
-            <!-- Основные -->
             <div id="tab-general" class="tab-pane active">
                 <div class="mb-3">
                     <label class="form-label">Сумма бонуса</label>
@@ -22,7 +21,6 @@
                 <div class="alert alert-info">За цикл: <strong class="text-success">{{ ($settings['bonus_amount'] ?? 100) * ($settings['days_count'] ?? 7) }} ₽</strong></div>
             </div>
 
-            <!-- Награды -->
             <div id="tab-rewards" class="tab-pane">
                 <div class="form-check form-switch mb-3">
                     <input class="form-check-input" type="checkbox" name="multiplier_mode" id="multiplier_mode" {{ ($settings['multiplier_mode'] ?? false) ? 'checked' : '' }}>
@@ -39,7 +37,6 @@
                 </div>
             </div>
 
-            <!-- Оформление -->
             <div id="tab-display" class="tab-pane">
                 <div class="form-check form-switch mb-3">
                     <input class="form-check-input" type="checkbox" name="show_timer" id="show_timer" {{ ($settings['show_timer'] ?? true) ? 'checked' : '' }}>
@@ -65,10 +62,7 @@
 </div>
 
 <style>
-.daily-bonus-settings-form {
-    min-width: 500px;
-}
-
+.daily-bonus-settings-form { min-width: 500px; }
 .daily-bonus-settings-form .setting-tabs .tab-header {
     display: flex;
     margin-bottom: 16px;
@@ -78,7 +72,6 @@
     border: 1px solid rgba(0,0,0,0.1);
     background: rgba(0,0,0,0.03);
 }
-
 .daily-bonus-settings-form .setting-tabs .tab-link {
     flex: 1;
     padding: 8px 16px;
@@ -94,55 +87,25 @@
     line-height: 1;
     text-align: center;
 }
-
-.daily-bonus-settings-form .setting-tabs .tab-link:hover {
-    background: rgba(0,0,0,0.05);
-    color: #495057;
-}
-
-.daily-bonus-settings-form .setting-tabs .tab-link.active {
-    color: #fff;
-    background: #0d6efd;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.daily-bonus-settings-form .setting-tabs .tab-content {
-    background: #fff;
-}
-
-.daily-bonus-settings-form .setting-tabs .tab-pane {
-    display: none;
-    flex-direction: column;
-    gap: 12px;
-    padding: 10px 0;
-}
-
-.daily-bonus-settings-form .setting-tabs .tab-pane.active {
-    display: flex;
-}
+.daily-bonus-settings-form .setting-tabs .tab-link:hover { background: rgba(0,0,0,0.05); color: #495057; }
+.daily-bonus-settings-form .setting-tabs .tab-link.active { color: #fff; background: #0d6efd; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.daily-bonus-settings-form .setting-tabs .tab-content { background: #fff; }
+.daily-bonus-settings-form .setting-tabs .tab-pane { display: none; flex-direction: column; gap: 12px; padding: 10px 0; }
+.daily-bonus-settings-form .setting-tabs .tab-pane.active { display: flex; }
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var form = document.querySelector('.daily-bonus-settings-form');
-    if (!form) return;
-
+function switchTab(btn, tabId) {
+    var form = btn.closest('.daily-bonus-settings-form');
     var tabs = form.querySelectorAll('.tab-link');
     var panes = form.querySelectorAll('.tab-pane');
-
-    tabs.forEach(function(tab) {
-        tab.addEventListener('click', function() {
-            tabs.forEach(function(t) { t.classList.remove('active'); });
-            panes.forEach(function(p) { p.classList.remove('active'); });
-
-            tab.classList.add('active');
-            var targetPane = form.querySelector('#' + tab.dataset.tab);
-            if (targetPane) {
-                targetPane.classList.add('active');
-            }
-        });
-    });
-});
+    
+    tabs.forEach(function(t) { t.classList.remove('active'); });
+    panes.forEach(function(p) { p.classList.remove('active'); });
+    
+    btn.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+}
 
 function setRewardPreset(type) {
     var presets = {
