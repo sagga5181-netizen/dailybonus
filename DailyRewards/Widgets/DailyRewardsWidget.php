@@ -19,7 +19,23 @@ class DailyRewardsWidget implements WidgetInterface
 
     public function getSettings(): array
     {
-        return [];
+        return [
+            'title' => 'Ежедневные бонусы',
+            'show_streak' => true,
+        ];
+    }
+
+    public function renderSettingsForm(array $settings): string
+    {
+        return '<div class="form-group">
+            <label>Заголовок</label>
+            <input type="text" name="settings[title]" value="' . ($settings['title'] ?? 'Ежедневные бонусы') . '" class="form-control">
+        </div>
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="settings[show_streak]" ' . (($settings['show_streak'] ?? true) ? 'checked' : '') . '> Показывать стрик
+            </label>
+        </div>';
     }
 
     public function render(array $settings): ?string
@@ -28,6 +44,9 @@ class DailyRewardsWidget implements WidgetInterface
         if (!$user) {
             return '';
         }
+
+        $title = $settings['title'] ?? 'Ежедневные бонусы';
+        $showStreak = $settings['show_streak'] ?? true;
 
         // Get user progress
         $progress = DailyRewardUser::query()->where('userId', $user->id)->fetchOne();
@@ -60,6 +79,8 @@ class DailyRewardsWidget implements WidgetInterface
         $streak = $progress->streak;
 
         return view('dailyrewards::widget.index', [
+            'title' => $title,
+            'showStreak' => $showStreak,
             'currentDay' => $currentDay,
             'streak' => $streak,
             'canClaim' => $canClaim,

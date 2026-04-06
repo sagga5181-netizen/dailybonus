@@ -1,7 +1,10 @@
 <div class="daily-reward-widget">
-    <h3>Ежедневные бонусы</h3>
+    <h3>{{ $title }}</h3>
     <p>День: {{ $currentDay }}</p>
+    
+    @if($showStreak)
     <p>Стрик: {{ $streak }}</p>
+    @endif
     
     @if($canClaim)
         <button class="btn-claim">Получить бонус</button>
