@@ -3,7 +3,6 @@
 namespace Flute\Modules\DailyRewards\Providers;
 
 use Flute\Core\Support\ModuleServiceProvider;
-use Flute\Admin\AdminPanel;
 
 class DailyRewardsServiceProvider extends ModuleServiceProvider
 {
@@ -22,16 +21,5 @@ class DailyRewardsServiceProvider extends ModuleServiceProvider
 
         // Load views
         $this->loadViews('Resources/views', 'dailyrewards');
-
-        // Register admin menu
-        $admin = app(AdminPanel::class);
-        
-        $admin->addMenuItem('dailyrewards', [
-            'title' => 'Ежедневные награды',
-            'icon' => 'gift',
-            'route' => 'dailyrewards.admin.index',
-            'permissions' => ['admin.boss', 'dailyrewards.manage'],
-            'position' => 50,
-        ]);
     }
 }
