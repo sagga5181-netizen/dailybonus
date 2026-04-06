@@ -120,36 +120,61 @@
     margin-bottom: 6px;
 }
 .daily-bonus-settings-form .form-control {
-    background: rgba(255,255,255,0.6);
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 14px;
-    transition: all 0.2s;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #2d3436;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+}
+.daily-bonus-settings-form .form-control:hover {
+    border-color: rgba(13,110,253,0.3);
+    background: rgba(255,255,255,0.7);
 }
 .daily-bonus-settings-form .form-control:focus {
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.95);
     border-color: #0d6efd;
-    box-shadow: 0 0 0 3px rgba(13,110,253,0.15);
+    box-shadow: 0 0 0 4px rgba(13,110,253,0.12), inset 0 2px 4px rgba(0,0,0,0.02);
+    outline: none;
+}
+/* Remove number input arrows for cleaner look */
+.daily-bonus-settings-form input[type="number"]::-webkit-outer-spin-button,
+.daily-bonus-settings-form input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.daily-bonus-settings-form input[type="number"] {
+    -moz-appearance: textfield;
 }
 .daily-bonus-settings-form .input-group-text {
-    background: rgba(255,255,255,0.6);
-    border: 1px solid rgba(0,0,0,0.1);
+    background: rgba(255,255,255,0.4);
+    border: 1px solid rgba(0,0,0,0.08);
     border-right: none;
-    border-radius: 8px 0 0 8px;
-    color: #6c757d;
+    border-radius: 10px 0 0 10px;
+    color: #636e72;
+    font-weight: 600;
+    padding: 12px 14px;
 }
 .daily-bonus-settings-form .input-group .form-control {
-    border-radius: 0 8px 8px 0;
+    border-radius: 0 10px 10px 0;
 }
 .daily-bonus-settings-form textarea.form-control {
-    border-radius: 8px;
-    font-size: 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+    line-height: 1.5;
+    resize: vertical;
 }
 .daily-bonus-settings-form .btn {
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 12px;
-    padding: 6px 12px;
+    font-weight: 500;
+    padding: 8px 14px;
+    transition: all 0.2s;
+    border: 1px solid rgba(0,0,0,0.1);
 }
 .daily-bonus-settings-form .alert {
     border-radius: 8px;
