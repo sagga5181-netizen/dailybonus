@@ -379,7 +379,7 @@ function switchTab(btn, tabId) {
     document.getElementById(tabId).classList.add('active');
 }
 
-// Days management
+// Days management - parse JSON properly
 var daysData = {{ $jsonDayRewards }};
 
 function renderDays() {
