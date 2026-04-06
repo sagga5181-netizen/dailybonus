@@ -4,7 +4,7 @@
     "description": "Система ежедневных наград с сериями и гибкой настройкой",
     "authors": ["Developer"],
     "providers": [
-        "DailyRewards\\Providers\\DailyRewardsServiceProvider"
+        "Flute\\Modules\\DailyRewards\\Providers\\DailyRewardsServiceProvider"
     ],
     "minimumFluteVersion": "1.0.0",
     "autoload": {

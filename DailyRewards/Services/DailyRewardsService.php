@@ -1,11 +1,11 @@
 <?php
 
-namespace DailyRewards\Services;
+namespace Flute\Modules\DailyRewards\Services;
 
-use DailyRewards\Database\Entities\DailyRewardConfig;
-use DailyRewards\Database\Entities\DailyReward;
-use DailyRewards\Database\Entities\DailyRewardUser;
-use DailyRewards\Database\Entities\DailyRewardHistory;
+use Flute\Modules\DailyRewards\Database\Entities\DailyRewardConfig;
+use Flute\Modules\DailyRewards\Database\Entities\DailyReward;
+use Flute\Modules\DailyRewards\Database\Entities\DailyRewardUser;
+use Flute\Modules\DailyRewards\Database\Entities\DailyRewardHistory;
 
 class DailyRewardsService
 {

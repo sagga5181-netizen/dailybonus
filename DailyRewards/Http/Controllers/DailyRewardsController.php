@@ -1,9 +1,9 @@
 <?php
 
-namespace DailyRewards\Http\Controllers;
+namespace Flute\Modules\DailyRewards\Http\Controllers;
 
 use Flute\Core\Http\Controller;
-use DailyRewards\Services\DailyRewardsService;
+use Flute\Modules\DailyRewards\Services\DailyRewardsService;
 
 class DailyRewardsController extends Controller
 {

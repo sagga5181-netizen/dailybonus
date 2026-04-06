@@ -1,6 +1,6 @@
 <?php
 
-namespace DailyRewards\Database\Entities;
+namespace Flute\Modules\DailyRewards\Database\Entities;
 
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Column;

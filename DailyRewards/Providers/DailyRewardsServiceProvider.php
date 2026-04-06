@@ -1,6 +1,6 @@
 <?php
 
-namespace DailyRewards\Providers;
+namespace Flute\Modules\DailyRewards\Providers;
 
 use Flute\Core\ModulesManager\Contracts\ModuleExtensionInterface;
 use Flute\Core\Database\Cycle\EntityHandler;
@@ -50,10 +50,10 @@ class DailyRewardsServiceProvider implements ModuleExtensionInterface
         $entityHandler = app(EntityHandler::class);
         
         $entityHandler->addEntities([
-            \DailyRewards\Database\Entities\DailyRewardConfig::class,
-            \DailyRewards\Database\Entities\DailyReward::class,
-            \DailyRewards\Database\Entities\DailyRewardUser::class,
-            \DailyRewards\Database\Entities\DailyRewardHistory::class,
+            \Flute\Modules\DailyRewards\Database\Entities\DailyRewardConfig::class,
+            \Flute\Modules\DailyRewards\Database\Entities\DailyReward::class,
+            \Flute\Modules\DailyRewards\Database\Entities\DailyRewardUser::class,
+            \Flute\Modules\DailyRewards\Database\Entities\DailyRewardHistory::class,
         ]);
     }
 

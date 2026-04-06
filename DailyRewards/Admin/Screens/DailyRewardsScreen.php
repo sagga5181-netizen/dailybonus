@@ -1,6 +1,6 @@
 <?php
 
-namespace DailyRewards\Admin\Screens;
+namespace Flute\Modules\DailyRewards\Admin\Screens;
 
 use Flute\Core\Admin\Abstractions\AbstractScreen;
 use Flute\Core\Http\Request;

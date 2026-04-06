@@ -1,8 +1,8 @@
 <?php
 
-namespace DailyRewards\Widgets;
+namespace Flute\Modules\DailyRewards\Widgets;
 
-use Flute\Core\Contracts\WidgetContract;
+use Flute\Modules\DailyRewards\Services\DailyRewardsService;
 
 class DailyRewardsWidget implements WidgetContract
 {
@@ -17,7 +17,7 @@ class DailyRewardsWidget implements WidgetContract
             return '';
         }
 
-        $service = new \DailyRewards\Services\DailyRewardsService();
+        $service = new DailyRewardsService();
 
         // Check if module is enabled
         if (!$service->getConfig('enabled')) {
