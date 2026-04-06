@@ -2,13 +2,11 @@
 
 namespace Flute\Modules\DailyRewards\Database\Entities;
 
-use Cycle\Annotated\Annotation\Entity;
+use Flute\Core\Database\Entities\BaseEntity;
 use Cycle\Annotated\Annotation\Column;
-use Cycle\Annotated\Annotation\Relation\Relation;
-use Cycle\Annotated\Annotation\Relation\HasMany;
 
 #[Entity(table: 'daily_rewards_config')]
-class DailyRewardConfig
+class DailyRewardConfig extends BaseEntity
 {
     #[Column(type: 'primary')]
     public int $id;
