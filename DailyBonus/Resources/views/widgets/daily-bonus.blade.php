@@ -2,15 +2,15 @@
     <div class="widget-header">
         <h3 class="widget-title">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            {{ __('dailybonus.widget.title') }}
+            Ежедневный бонус
         </h3>
     </div>
     <div class="widget-body">
         @if(!$userBonus['isLoggedIn'])
             <div class="daily-bonus-guest">
-                <p class="text-center text-muted">{{ __('dailybonus.widget.login_required') }}</p>
+                <p class="text-center text-muted">Войдите, чтобы получать ежедневные бонусы</p>
                 <a href="{{ route('login') }}" class="btn btn-primary w-100">
-                    {{ __('dailybonus.widget.login') }}
+                    Войти
                 </a>
             </div>
         @else
@@ -19,13 +19,13 @@
                     <div class="col-6">
                         <div class="stat-item">
                             <span class="stat-value">{{ $userBonus['claimCount'] ?? 0 }}</span>
-                            <span class="stat-label">{{ __('dailybonus.stats.days_claimed') }}</span>
+                            <span class="stat-label">Дней получено</span>
                         </div>
                     </div>
                     <div class="col-6">
                         <div class="stat-item">
                             <span class="stat-value">{{ number_format($userBonus['totalClaimed'] ?? 0, 0, ',', ' ') }}</span>
-                            <span class="stat-label">{{ __('dailybonus.stats.total_received') }}</span>
+                            <span class="stat-label">Всего получено</span>
                         </div>
                     </div>
                 </div>
@@ -46,9 +46,7 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                                 </div>
                             @elseif($isCurrent)
-                                <div class="day-status current-badge">
-                                    {{ __('dailybonus.today') }}
-                                </div>
+                                <div class="day-status current-badge">Сегодня</div>
                             @endif
                         </div>
                     @endforeach
@@ -57,19 +55,19 @@
             <div class="bonus-action mt-4">
                 @if($userBonus['canClaim'])
                     <button type="button" class="btn btn-success btn-claim w-100" onclick="claimDailyBonus()">
-                        {{ __('dailybonus.claim') }}
+                        Получить бонус
                     </button>
                 @else
                     @if($showTimer && isset($userBonus['nextClaimTime']))
                         <div class="countdown-wrapper text-center">
-                            <p class="text-muted mb-2">{{ __('dailybonus.next_bonus_in') }}</p>
+                            <p class="text-muted mb-2">Следующий бонус через:</p>
                             <div class="countdown-timer" data-time="{{ $userBonus['nextClaimTime'] }}">
                                 <span class="hours">00</span>:<span class="minutes">00</span>:<span class="seconds">00</span>
                             </div>
                         </div>
                     @else
                         <button type="button" class="btn btn-secondary w-100" disabled>
-                            {{ __('dailybonus.come_back_tomorrow') }}
+                            Возвращайтесь завтра
                         </button>
                     @endif
                 @endif
