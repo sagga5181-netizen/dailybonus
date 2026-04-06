@@ -107,7 +107,7 @@ class DailyBonusWidget implements WidgetInterface
         }
 
         $userId = user()->id;
-        $lastBonus = UserBonus::select('*')
+        $lastBonus = UserBonus::query()
             ->where('user_id', $userId)
             ->orderBy('claimed_at', 'DESC')
             ->first();
@@ -130,7 +130,7 @@ class DailyBonusWidget implements WidgetInterface
             $currentDay = $lastBonus->day_number + 1;
         }
 
-        $allBonuses = UserBonus::select('*')->where('user_id', $userId)->all();
+        $allBonuses = UserBonus::query()->where('user_id', $userId)->all();
         $totalClaimed = 0;
         foreach ($allBonuses as $bonus) {
             $totalClaimed += $bonus->amount;

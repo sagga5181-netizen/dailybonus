@@ -21,7 +21,7 @@ class DailyBonusController extends BaseController
         $userId = user()->id;
         
         // Получаем последнюю запись о бонусе
-        $lastBonus = UserBonus::select('*')
+        $lastBonus = UserBonus::query()
             ->where('user_id', $userId)
             ->orderBy('claimed_at', 'DESC')
             ->first();
