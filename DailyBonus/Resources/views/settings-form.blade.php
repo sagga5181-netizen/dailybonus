@@ -88,7 +88,8 @@ if (isset($settings['day_rewards']) && is_string($settings['day_rewards'])) {
     $dayRewards = $settings['day_rewards'];
 }
 $bonusAmount = is_array($settings['bonus_amount'] ?? null) ? 100 : ($settings['bonus_amount'] ?? 100);
-$jsonDayRewards = json_encode($dayRewards ?: array_fill(1, 7, $bonusAmount));
+$daysCount = is_array($settings['days_count'] ?? null) ? 7 : ($settings['days_count'] ?? 7);
+$jsonDayRewards = json_encode($dayRewards ?: array_fill(1, max(7, (int)$daysCount), $bonusAmount));
 ?>
 
 <input type="hidden" name="day_rewards" id="day_rewards_json" value='{{ $jsonDayRewards }}'>
@@ -119,6 +120,8 @@ $jsonDayRewards = json_encode($dayRewards ?: array_fill(1, 7, $bonusAmount));
     position: relative;
     line-height: 1;
     text-align: center;
+    pointer-events: auto !important;
+    z-index: 10;
 }
 .daily-bonus-settings-form .setting-tabs .tab-link:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
 .daily-bonus-settings-form .setting-tabs .tab-link.active { color: #fff; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); }
