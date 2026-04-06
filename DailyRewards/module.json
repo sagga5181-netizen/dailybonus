@@ -4,16 +4,16 @@
     "description": "Система ежедневных наград с сериями и гибкой настройкой",
     "authors": ["Developer"],
     "providers": [
-        "DailyRewards\\src\\Providers\\DailyRewardsServiceProvider"
+        "DailyRewards\\Providers\\DailyRewardsServiceProvider"
     ],
     "minimumFluteVersion": "1.0.0",
     "autoload": {
         "psr-4": {
-            "DailyRewards\\": "src/"
+            "DailyRewards\\": ""
         }
     },
     "assets": {
-        "scss": "src/Resources/assets/scss/daily-rewards.scss"
+        "scss": "Resources/assets/scss/daily-rewards.scss"
     },
     "permissions": [
         "dailyrewards.manage"

@@ -27,13 +27,13 @@ class DailyRewardsServiceProvider implements ModuleExtensionInterface
         $this->loadTranslations();
 
         // Load SCSS styles
-        $this->loadScss('src/Resources/assets/scss/daily-rewards.scss');
+        $this->loadScss('Resources/assets/scss/daily-rewards.scss');
 
         // Load routes
-        $this->loadRoutesFrom('src/Routes/web.php');
+        $this->loadRoutesFrom('Routes/web.php');
 
         // Load views
-        $this->loadViews('src/Resources/views', 'dailyrewards');
+        $this->loadViews('Resources/views', 'dailyrewards');
 
         // Load widgets
         $this->loadWidgets();
