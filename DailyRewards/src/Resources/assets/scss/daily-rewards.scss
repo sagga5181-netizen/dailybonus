@@ -1,0 +1,688 @@
+// Daily Rewards Module - SCSS Styles
+
+// Theme Variables
+$primary: #6366f1;
+$primary-dark: #4f46e5;
+$secondary: #f59e0b;
+$success: #10b981;
+$danger: #ef4444;
+
+// CSS Custom Properties
+:root {
+    --dr-primary: #{$primary};
+    --dr-primary-dark: #{$primary-dark};
+    --dr-secondary: #{$secondary};
+    --dr-success: #{$success};
+    --dr-danger: #{$danger};
+}
+
+// Theme: Ocean
+[data-theme="ocean"] {
+    --dr-primary: #0ea5e9;
+}
+
+// Theme: Sunset
+[data-theme="sunset"] {
+    --dr-primary: #f97316;
+}
+
+// Theme: Forest
+[data-theme="forest"] {
+    --dr-primary: #22c55e;
+}
+
+// Theme: Royal
+[data-theme="royal"] {
+    --dr-primary: #8b5cf6;
+}
+
+// Theme: Midnight
+[data-theme="midnight"] {
+    --dr-primary: #1e293b;
+}
+
+// Widget Styles
+.daily-rewards-widget {
+    font-family: inherit;
+    
+    .dr-widget-wrapper {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .dr-widget-header {
+        background: linear-gradient(135deg, var(--dr-primary) 0%, var(--dr-primary-dark) 100%);
+        padding: 24px;
+        color: white;
+        text-align: center;
+
+        .dr-widget-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 8px;
+        }
+
+        .dr-widget-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin: 0;
+        }
+    }
+
+    .dr-streak-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 12px;
+    }
+
+    .dr-days-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+        padding: 20px;
+
+        @media (max-width: 600px) {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    .dr-day-card {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 12px 8px;
+        text-align: center;
+        transition: all 0.2s;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        &.current {
+            border-color: var(--dr-primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        &.completed {
+            border-color: var(--dr-success);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        &.locked {
+            opacity: 0.5;
+        }
+
+        .dr-day-number {
+            font-size: 10px;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .dr-day-icon {
+            font-size: 24px;
+            margin: 8px 0;
+            color: #94a3b8;
+        }
+
+        .dr-day-reward {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .dr-day-type {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+    }
+
+    .dr-progress-container {
+        padding: 0 20px 20px;
+    }
+
+    .dr-progress-wrapper {
+        background: #f1f5f9;
+        border-radius: 10px;
+        height: 10px;
+        overflow: hidden;
+    }
+
+    .dr-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--dr-primary), #818cf8);
+        border-radius: 10px;
+        transition: width 0.5s;
+    }
+
+    .dr-progress-text {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #64748b;
+        margin-top: 8px;
+    }
+
+    .dr-claim-section {
+        padding: 20px;
+        text-align: center;
+        background: #f8fafc;
+    }
+
+    .dr-claim-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 14px 40px;
+        font-size: 16px;
+        font-weight: 700;
+        color: white;
+        background: linear-gradient(135deg, var(--dr-primary), var(--dr-primary-dark));
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-transform: uppercase;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        &.disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+    }
+
+    .dr-cooldown {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 12px;
+        font-size: 14px;
+        color: #64748b;
+    }
+
+    .dr-cooldown-time {
+        font-weight: 700;
+        font-family: monospace;
+    }
+}
+
+// Modal
+.dr-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+
+    &.active {
+        display: flex;
+    }
+
+    .dr-modal-content {
+        background: white;
+        border-radius: 16px;
+        padding: 40px;
+        text-align: center;
+        animation: modalIn 0.3s ease-out;
+
+        .dr-modal-icon {
+            font-size: 64px;
+            color: var(--dr-success);
+            margin-bottom: 16px;
+        }
+
+        h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 0 8px;
+        }
+
+        p {
+            color: #64748b;
+            margin: 0;
+        }
+    }
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+// Admin Styles
+.admin-page {
+    .admin-header {
+        background: linear-gradient(135deg, $primary, $primary-dark);
+        color: white;
+        padding: 30px;
+        border-radius: 16px;
+        margin-bottom: 24px;
+
+        h1 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 0 8px;
+            font-size: 28px;
+        }
+
+        p {
+            margin: 0;
+            opacity: 0.9;
+        }
+    }
+
+    .admin-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+        background: white;
+        padding: 8px;
+        border-radius: 12px;
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 20px;
+            color: #64748b;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.2s;
+
+            &:hover {
+                background: #f1f5f9;
+            }
+
+            &.active {
+                background: $primary;
+                color: white;
+            }
+        }
+    }
+
+    .tab-content {
+        background: white;
+        border-radius: 16px;
+        padding: 30px;
+    }
+
+    .form-section {
+        margin-bottom: 32px;
+        padding-bottom: 32px;
+        border-bottom: 1px solid #e2e8f0;
+
+        h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0 0 20px;
+
+            i {
+                color: $primary;
+            }
+        }
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        small {
+            display: block;
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 6px;
+        }
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 14px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        transition: all 0.2s;
+
+        &:focus {
+            outline: none;
+            border-color: $primary;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+    }
+
+    .form-textarea.code {
+        font-family: monospace;
+        background: #1e293b;
+        color: #e2e8f0;
+        border-color: #1e293b;
+    }
+
+    .toggle {
+        display: inline-flex;
+        align-items: center;
+        cursor: pointer;
+
+        input {
+            display: none;
+        }
+
+        .toggle-slider {
+            width: 52px;
+            height: 28px;
+            background: #e2e8f0;
+            border-radius: 28px;
+            position: relative;
+            transition: all 0.3s;
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 3px;
+                left: 3px;
+                width: 22px;
+                height: 22px;
+                background: white;
+                border-radius: 50%;
+                transition: all 0.3s;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+        }
+
+        input:checked + .toggle-slider {
+            background: $primary;
+
+            &::before {
+                transform: translateX(24px);
+            }
+        }
+
+        .toggle-label {
+            margin-left: 12px;
+            font-weight: 500;
+        }
+    }
+
+    .theme-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 12px;
+
+        .theme-option {
+            text-align: center;
+            padding: 12px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+                border-color: $primary;
+            }
+
+            &.active {
+                border-color: $primary;
+                background: rgba(99, 102, 241, 0.05);
+            }
+
+            .theme-preview {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+                margin: 0 auto 8px;
+            }
+
+            span {
+                font-size: 12px;
+                font-weight: 600;
+                color: #64748b;
+            }
+        }
+    }
+
+    .rewards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 16px;
+    }
+
+    .reward-card {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 16px;
+
+        &.empty {
+            border-style: dashed;
+            opacity: 0.7;
+        }
+
+        .reward-day {
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .reward-content {
+            display: flex;
+            gap: 12px;
+        }
+
+        .reward-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, $primary, #818cf8);
+            border-radius: 12px;
+            color: white;
+            font-size: 20px;
+        }
+
+        .reward-info {
+            flex: 1;
+
+            .reward-name {
+                display: block;
+                font-size: 14px;
+                font-weight: 700;
+                color: #1e293b;
+            }
+
+            .reward-value {
+                display: block;
+                font-size: 16px;
+                font-weight: 700;
+                color: $success;
+            }
+
+            .reward-type {
+                display: block;
+                font-size: 11px;
+                color: #64748b;
+            }
+        }
+
+        .reward-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+                background: #f1f5f9;
+                color: $primary;
+            }
+
+            &.btn-danger:hover {
+                background: #fee2e2;
+                color: $danger;
+            }
+        }
+
+        .reward-empty {
+            text-align: center;
+            padding: 20px;
+            color: #94a3b8;
+
+            i {
+                font-size: 24px;
+                margin-bottom: 8px;
+                display: block;
+            }
+        }
+    }
+
+    .hooks-list {
+        .hook-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px;
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-bottom: 12px;
+
+            code {
+                font-family: monospace;
+                font-size: 13px;
+                color: $primary;
+                background: rgba(99, 102, 241, 0.1);
+                padding: 4px 10px;
+                border-radius: 6px;
+            }
+
+            span {
+                font-size: 13px;
+                color: #64748b;
+            }
+        }
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &.btn-primary {
+            background: $primary;
+            color: white;
+
+            &:hover {
+                background: $primary-dark;
+            }
+        }
+
+        &.btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+
+            &:hover {
+                background: #e2e8f0;
+            }
+        }
+
+        &.btn-success {
+            background: $success;
+            color: white;
+
+            &:hover {
+                background: #059669;
+            }
+        }
+    }
+
+    .input-group {
+        display: flex;
+        gap: 10px;
+
+        .form-input {
+            flex: 1;
+        }
+    }
+
+    .form-actions {
+        margin-top: 24px;
+    }
+
+    .rewards-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+
+        .badge {
+            padding: 6px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            background: $primary;
+            color: white;
+            border-radius: 20px;
+        }
+    }
+}
