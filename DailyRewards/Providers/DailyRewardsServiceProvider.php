@@ -23,9 +23,6 @@ class DailyRewardsServiceProvider extends ModuleServiceProvider
         // Load views
         $this->loadViews('Resources/views', 'dailyrewards');
 
-        // Load widgets
-        $this->loadWidgets();
-
         // Register admin menu
         $admin = app(AdminPanel::class);
         

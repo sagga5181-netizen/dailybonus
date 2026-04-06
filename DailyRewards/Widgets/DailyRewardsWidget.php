@@ -3,8 +3,9 @@
 namespace Flute\Modules\DailyRewards\Widgets;
 
 use Flute\Modules\DailyRewards\Services\DailyRewardsService;
+use Flute\Core\Modules\Page\Widgets\Contracts\WidgetInterface;
 
-class DailyRewardsWidget implements WidgetContract
+class DailyRewardsWidget implements WidgetInterface
 {
     /**
      * Render widget
