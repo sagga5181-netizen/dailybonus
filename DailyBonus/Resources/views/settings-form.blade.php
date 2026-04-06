@@ -1,58 +1,39 @@
 <div class="daily-bonus-settings-form">
     <div class="setting-tabs">
         <div class="tab-header">
-            <button type="button" class="tab-link active" data-tab="tab-general" onclick="var form=this.closest('.daily-bonus-settings-form');var tabs=form.querySelectorAll('.tab-link');var panes=form.querySelectorAll('.tab-pane');tabs.forEach(function(t){t.classList.remove('active')});panes.forEach(function(p){p.classList.remove('active')});this.classList.add('active');document.getElementById('tab-general').classList.add('active')">Основные</button>
-            <button type="button" class="tab-link" data-tab="tab-rewards" onclick="var form=this.closest('.daily-bonus-settings-form');var tabs=form.querySelectorAll('.tab-link');var panes=form.querySelectorAll('.tab-pane');tabs.forEach(function(t){t.classList.remove('active')});panes.forEach(function(p){p.classList.remove('active')});this.classList.add('active');document.getElementById('tab-rewards').classList.add('active')">Награды</button>
-            <button type="button" class="tab-link" data-tab="tab-cycle" onclick="var form=this.closest('.daily-bonus-settings-form');var tabs=form.querySelectorAll('.tab-link');var panes=form.querySelectorAll('.tab-pane');tabs.forEach(function(t){t.classList.remove('active')});panes.forEach(function(p){p.classList.remove('active')});this.classList.add('active');document.getElementById('tab-cycle').classList.add('active')">Цикл</button>
-            <button type="button" class="tab-link" data-tab="tab-display" onclick="var form=this.closest('.daily-bonus-settings-form');var tabs=form.querySelectorAll('.tab-link');var panes=form.querySelectorAll('.tab-pane');tabs.forEach(function(t){t.classList.remove('active')});panes.forEach(function(p){p.classList.remove('active')});this.classList.add('active');document.getElementById('tab-display').classList.add('active')">Оформление</button>
+            <button type="button" class="tab-link active" onclick="switchTab(this, 'tab-general')">Основные</button>
+            <button type="button" class="tab-link" onclick="switchTab(this, 'tab-rewards')">Награды</button>
+            <button type="button" class="tab-link" onclick="switchTab(this, 'tab-display')">Оформление</button>
         </div>
         <div class="tab-content">
             <div id="tab-general" class="tab-pane active">
                 <div class="mb-3">
-                    <label class="form-label">Базовый бонус</label>
+                    <label class="form-label">Сумма бонуса</label>
                     <div class="input-group">
                         <span class="input-group-text">₽</span>
                         <input type="number" name="bonus_amount" class="form-control" value="{{ is_array($settings['bonus_amount'] ?? null) ? 100 : ($settings['bonus_amount'] ?? 100) }}" min="1">
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Тип награды</label>
-                    <select name="reward_type" class="form-control">
-                        <option value="balance" {{ ($settings['reward_type'] ?? 'balance') === 'balance' ? 'selected' : '' }}>Баланс (₽)</option>
-                        <option value="coins" {{ ($settings['reward_type'] ?? 'balance') === 'coins' ? 'selected' : '' }}>Монеты</option>
-                        <option value="points" {{ ($settings['reward_type'] ?? 'balance') === 'points' ? 'selected' : '' }}>Поинты</option>
-                    </select>
+                    <label class="form-label">Количество дней</label>
+                    <input type="number" name="days_count" class="form-control" value="{{ is_array($settings['days_count'] ?? null) ? 7 : ($settings['days_count'] ?? 7) }}" min="3" max="30">
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Количество дней в цикле</label>
-                    <input type="number" name="days_count" class="form-control" value="{{ is_array($settings['days_count'] ?? null) ? 7 : ($settings['days_count'] ?? 7) }}" min="1" max="30">
-                </div>
-                <div class="alert alert-info">За цикл: <strong class="text-success" id="total-cycle">0</strong> ₽</div>
+                <div class="alert alert-info">За цикл: <strong class="text-success">{{ (is_array($settings['bonus_amount'] ?? null) ? 100 : ($settings['bonus_amount'] ?? 100)) * (is_array($settings['days_count'] ?? null) ? 7 : ($settings['days_count'] ?? 7)) }} ₽</strong></div>
             </div>
 
             <div id="tab-rewards" class="tab-pane">
-                <div class="days-list" id="days-list">
-                    {{-- Days will be rendered here by JavaScript --}}
-                </div>
-                <button type="button" class="btn btn-add-day" onclick="addDay()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                    Добавить день
-                </button>
-            </div>
-
-            <div id="tab-cycle" class="tab-pane">
                 <div class="form-check form-switch mb-3">
-                    <input class="form-check-input" type="checkbox" name="cycle_enabled" id="cycle_enabled" {{ ($settings['cycle_enabled'] ?? true) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="cycle_enabled">Цикличность (сброс после N дней)</label>
+                    <input class="form-check-input" type="checkbox" name="multiplier_mode" id="multiplier_mode" {{ ($settings['multiplier_mode'] ?? false) ? 'checked' : '' }}>
+                    <label class="form-check-label" for="multiplier_mode">Режим множителя</label>
                 </div>
-                <div class="form-check form-switch mb-3">
-                    <input class="form-check-input" type="checkbox" name="reset_on_miss" id="reset_on_miss" {{ ($settings['reset_on_miss'] ?? true) ? 'checked' : '' }}>
-                    <label class="form-check-label" for="reset_on_miss">Сбросить прогресс если пропущен день</label>
-                </div>
-                <div class="alert alert-info">
-                    <strong>Как это работает:</strong><br>
-                    ☑ Цикличность — после N дней прогресс начнётся сначала<br>
-                    ☑ Сброс при пропуске — если игрок не зайдёт 2 дня, прогресс начнётся сначала
+                <div class="mb-3">
+                    <label class="form-label">Награды по дням (JSON)</label>
+                    <textarea name="day_rewards" class="form-control font-monospace" rows="3">{{ is_array($settings['day_rewards'] ?? null) ? '{"1":100,"2":100,"3":100,"4":100,"5":100,"6":100,"7":100}' : ($settings['day_rewards'] ?? '{"1":100,"2":100,"3":100,"4":100,"5":100,"6":100,"7":100}') }}</textarea>
+                    <div class="mt-1">
+                        <button type="button" class="btn btn-sm btn-outline-secondary me-1" onclick="setRewardPreset('classic')">Одинаковый</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary me-1" onclick="setRewardPreset('growth')">Растущий</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="setRewardPreset('big')">Большой</button>
+                    </div>
                 </div>
             </div>
 
@@ -80,20 +61,6 @@
     </div>
 </div>
 
-<?php
-$dayRewards = [];
-if (isset($settings['day_rewards']) && is_string($settings['day_rewards'])) {
-    $dayRewards = json_decode($settings['day_rewards'], true) ?? [];
-} elseif (is_array($settings['day_rewards'] ?? [])) {
-    $dayRewards = $settings['day_rewards'];
-}
-$bonusAmount = is_array($settings['bonus_amount'] ?? null) ? 100 : ($settings['bonus_amount'] ?? 100);
-$daysCount = is_array($settings['days_count'] ?? null) ? 7 : ($settings['days_count'] ?? 7);
-$jsonDayRewards = json_encode($dayRewards ?: array_fill(1, max(7, (int)$daysCount), $bonusAmount));
-?>
-
-<input type="hidden" name="day_rewards" id="day_rewards_json" value='{{ $jsonDayRewards }}'>
-
 <style>
 .daily-bonus-settings-form { min-width: 500px; }
 /* Tab header - оставляем как есть, горизонтально сверху */
@@ -103,10 +70,8 @@ $jsonDayRewards = json_encode($dayRewards ?: array_fill(1, max(7, (int)$daysCoun
     border-radius: 50px;
     padding: 3px;
     gap: 3px;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.05);
-    position: relative;
-    z-index: 1;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: rgba(0,0,0,0.03);
 }
 .daily-bonus-settings-form .setting-tabs .tab-link {
     flex: 1;
@@ -114,7 +79,7 @@ $jsonDayRewards = json_encode($dayRewards ?: array_fill(1, max(7, (int)$daysCoun
     cursor: pointer;
     border: none;
     background: transparent;
-    color: rgba(255,255,255,0.5);
+    color: #6c757d;
     font-weight: 500;
     font-size: 13px;
     border-radius: 50px;
@@ -123,149 +88,100 @@ $jsonDayRewards = json_encode($dayRewards ?: array_fill(1, max(7, (int)$daysCoun
     line-height: 1;
     text-align: center;
 }
-.daily-bonus-settings-form .setting-tabs .tab-link:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
-.daily-bonus-settings-form .setting-tabs .tab-link.active { color: #fff; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); }
-/* Tab content - используем темный фон как в Hero */
+.daily-bonus-settings-form .setting-tabs .tab-link:hover { background: rgba(0,0,0,0.05); color: #495057; }
+.daily-bonus-settings-form .setting-tabs .tab-link.active { color: #fff; background: #0d6efd; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+/* Tab content - убираем белый фон, делаем прозрачным */
 .daily-bonus-settings-form .setting-tabs .tab-content { 
-    background: rgba(0,0,0,0.2);
-    border-radius: 16px;
-    padding: 16px;
-    border: 1px solid rgba(255,255,255,0.05);
+    background: transparent; 
 }
 .daily-bonus-settings-form .setting-tabs .tab-pane { 
     display: none; 
     flex-direction: column; 
-    gap: 16px; 
+    gap: 12px; 
+    padding: 0;
 }
 .daily-bonus-settings-form .setting-tabs .tab-pane.active { 
     display: flex; 
 }
-/* Стильные элементы формы - темная тема */
+/* Стильные элементы формы без фона */
 .daily-bonus-settings-form .mb-3 {
-    background: rgba(255,255,255,0.03);
-    padding: 12px 16px;
-    border-radius: 12px;
+    background: transparent;
+    padding: 8px 12px;
+    border-radius: 8px;
     transition: background 0.2s;
-    border: 1px solid rgba(255,255,255,0.03);
 }
 .daily-bonus-settings-form .mb-3:hover {
-    background: rgba(255,255,255,0.06);
+    background: rgba(0,0,0,0.02);
 }
 .daily-bonus-settings-form .form-label {
-    color: rgba(255,255,255,0.7);
+    color: #495057;
     font-weight: 500;
     font-size: 13px;
-    margin-bottom: 8px;
-    display: block;
+    margin-bottom: 6px;
 }
 .daily-bonus-settings-form .form-control {
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
-    padding: 12px 16px;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 10px 14px;
     font-size: 14px;
-    font-weight: 500;
-    color: #fff;
-    transition: all 0.25s;
-    width: 100%;
-}
-.daily-bonus-settings-form .form-control::placeholder {
-    color: rgba(255,255,255,0.3);
-}
-.daily-bonus-settings-form .form-control:hover {
-    border-color: rgba(255,255,255,0.2);
-    background: rgba(0,0,0,0.4);
+    transition: all 0.2s;
 }
 .daily-bonus-settings-form .form-control:focus {
-    background: rgba(0,0,0,0.5);
-    border-color: rgba(255,255,255,0.3);
-    box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
-    outline: none;
-    color: #fff;
-}
-/* Remove number input arrows for cleaner look */
-.daily-bonus-settings-form input[type="number"]::-webkit-outer-spin-button,
-.daily-bonus-settings-form input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-.daily-bonus-settings-form input[type="number"] {
-    -moz-appearance: textfield;
+    background: rgba(255,255,255,0.9);
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13,110,253,0.15);
 }
 .daily-bonus-settings-form .input-group-text {
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.6);
+    border: 1px solid rgba(0,0,0,0.1);
     border-right: none;
-    border-radius: 10px 0 0 10px;
-    color: rgba(255,255,255,0.6);
-    font-weight: 600;
-    padding: 12px 14px;
+    border-radius: 8px 0 0 8px;
+    color: #6c757d;
 }
 .daily-bonus-settings-form .input-group .form-control {
-    border-radius: 0 10px 10px 0;
+    border-radius: 0 8px 8px 0;
 }
 .daily-bonus-settings-form textarea.form-control {
-    border-radius: 10px;
-    font-size: 13px;
-    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
-    line-height: 1.5;
-    resize: vertical;
-    min-height: 80px;
-}
-.daily-bonus-settings-form .btn {
     border-radius: 8px;
     font-size: 12px;
-    font-weight: 500;
-    padding: 8px 14px;
-    transition: all 0.2s;
-    border: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.05);
-    color: rgba(255,255,255,0.8);
 }
-.daily-bonus-settings-form .btn:hover {
-    background: rgba(255,255,255,0.1);
-    color: #fff;
+.daily-bonus-settings-form .btn {
+    border-radius: 6px;
+    font-size: 12px;
+    padding: 6px 12px;
 }
 .daily-bonus-settings-form .alert {
-    border-radius: 12px;
+    border-radius: 8px;
     border: none;
-    padding: 14px 18px;
+    padding: 10px 14px;
 }
 .daily-bonus-settings-form .alert-info {
-    background: rgba(59, 130, 246, 0.15);
-    color: #60a5fa;
-    border: 1px solid rgba(59, 130, 246, 0.2);
-}
-.daily-bonus-settings-form .text-success {
-    color: #4ade80 !important;
+    background: rgba(13,110,253,0.1);
+    color: #0d6efd;
 }
 .daily-bonus-settings-form .form-check {
-    padding: 10px 14px;
-    border-radius: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
     transition: background 0.2s;
-    display: flex;
-    align-items: center;
 }
 .daily-bonus-settings-form .form-check:hover {
-    background: rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.02);
 }
 .daily-bonus-settings-form .form-check-input {
     width: 44px;
     height: 24px;
     border-radius: 12px;
     cursor: pointer;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.15);
 }
 .daily-bonus-settings-form .form-check-input:checked {
-    background: #3b82f6;
-    border-color: #3b82f6;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
 }
 .daily-bonus-settings-form .form-check-label {
-    color: rgba(255,255,255,0.8);
+    color: #495057;
     font-size: 14px;
     cursor: pointer;
-    margin-left: 8px;
 }
 .daily-bonus-settings-form .form-control-color {
     width: 50px;
@@ -273,8 +189,6 @@ $jsonDayRewards = json_encode($dayRewards ?: array_fill(1, max(7, (int)$daysCoun
     padding: 4px;
     border-radius: 8px;
     cursor: pointer;
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.1);
 }
 .daily-bonus-settings-form .row {
     margin: 0 -8px;
@@ -282,127 +196,11 @@ $jsonDayRewards = json_encode($dayRewards ?: array_fill(1, max(7, (int)$daysCoun
 .daily-bonus-settings-form .col-md-6 {
     padding: 0 8px;
 }
-.daily-bonus-settings-form .mt-1 {
-    margin-top: 8px;
-}
-/* Days list */
-.daily-bonus-settings-form .days-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-.daily-bonus-settings-form .day-item {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 12px;
-    padding: 16px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    transition: all 0.2s;
-}
-.daily-bonus-settings-form .day-item:hover {
-    background: rgba(255,255,255,0.06);
-    border-color: rgba(255,255,255,0.1);
-}
-.daily-bonus-settings-form .day-number {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    background: rgba(59, 130, 246, 0.2);
-    color: #60a5fa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 14px;
-    flex-shrink: 0;
-}
-.daily-bonus-settings-form .day-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-.daily-bonus-settings-form .day-label {
-    color: rgba(255,255,255,0.6);
-    font-size: 12px;
-    font-weight: 500;
-}
-.daily-bonus-settings-form .day-input-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.daily-bonus-settings-form .day-input {
-    width: 100px;
-}
-.daily-bonus-settings-form .day-amount-input {
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 8px;
-    padding: 8px 12px;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 500;
-    width: 120px;
-    text-align: right;
-}
-.daily-bonus-settings-form .day-amount-input:focus {
-    outline: none;
-    border-color: rgba(255,255,255,0.3);
-    background: rgba(0,0,0,0.5);
-}
-.daily-bonus-settings-form .day-currency {
-    color: rgba(255,255,255,0.5);
-    font-weight: 500;
-}
-.daily-bonus-settings-form .day-delete {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    border: none;
-    background: rgba(239, 68, 68, 0.1);
-    color: rgba(239, 68, 68, 0.6);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    flex-shrink: 0;
-}
-.daily-bonus-settings-form .day-delete:hover {
-    background: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
-}
-.daily-bonus-settings-form .btn-add-day {
-    width: 100%;
-    padding: 14px;
-    margin-top: 12px;
-    background: rgba(59, 130, 246, 0.1);
-    border: 1px dashed rgba(59, 130, 246, 0.3);
-    border-radius: 12px;
-    color: #60a5fa;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.2s;
-}
-.daily-bonus-settings-form .btn-add-day:hover {
-    background: rgba(59, 130, 246, 0.2);
-    border-color: rgba(59, 130, 246, 0.5);
-}
 </style>
 
 <script>
 function switchTab(btn, tabId) {
     var form = btn.closest('.daily-bonus-settings-form');
-    if (!form) return;
-    
     var tabs = form.querySelectorAll('.tab-link');
     var panes = form.querySelectorAll('.tab-pane');
     
@@ -410,95 +208,15 @@ function switchTab(btn, tabId) {
     panes.forEach(function(p) { p.classList.remove('active'); });
     
     btn.classList.add('active');
-    var targetPane = document.getElementById(tabId);
-    if (targetPane) {
-        targetPane.classList.add('active');
-    }
+    document.getElementById(tabId).classList.add('active');
 }
 
- - parse JSON properly with fallback
-    try {
-        var daysData = {{ $jsonDayRewards }};
-    } catch(e) {
-        var daysData = {"1":100,"2":100,"3":100,"4":100,"5":100,"6":100,"7":100};
-    }
-
-    function renderDays() {
-        var container = document.getElementById('days-list');
-        if (!container) return;
-        
-        container.innerHTML = '';
-        
-        var total = 0;
-        var bonusAmount = parseInt(document.querySelector('input[name="bonus_amount"]').value) || 100;
-    
-    Object.keys(daysData).forEach(function(dayNum) {
-        var amount = parseInt(daysData[dayNum]) || 0;
-        total += amount;
-        
-        var dayItem = document.createElement('div');
-        dayItem.className = 'day-item';
-        dayItem.innerHTML = 
-            '<div class="day-number">' + dayNum + '</div>' +
-            '<div class="day-content">' +
-                '<div class="day-label">День ' + dayNum + '</div>' +
-                '<div class="day-input-row">' +
-                    '<input type="number" class="form-control day-amount-input" ' +
-                        'value="' + amount + '" ' +
-                        'onchange="updateDay(' + dayNum + ', this.value)" ' +
-                        'min="0" placeholder="0">' +
-                    '<span class="day-currency">₽</span>' +
-                '</div>' +
-            '</div>' +
-            '<button type="button" class="day-delete" onclick="deleteDay(' + dayNum + ')" ' + (Object.keys(daysData).length <= 1 ? 'disabled' : '') + '>' +
-                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
-                    '<line x1="18" y1="6" x2="6" y2="18"></line>' +
-                    '<line x1="6" y1="6" x2="18" y2="18"></line>' +
-                '</svg>' +
-            '</button>';
-        container.appendChild(dayItem);
-    });
-    
-    document.getElementById('total-cycle').textContent = total;
-    document.getElementById('day_rewards_json').value = JSON.stringify(daysData);
+function setRewardPreset(type) {
+    var presets = {
+        'classic': '{"1":100,"2":100,"3":100,"4":100,"5":100,"6":100,"7":100}',
+        'growth': '{"1":50,"2":100,"3":150,"4":200,"5":300,"6":400,"7":500}',
+        'big': '{"1":100,"2":200,"3":300,"4":500,"5":750,"6":1000,"7":2000}'
+    };
+    document.querySelector('textarea[name="day_rewards"]').value = presets[type];
 }
-
-function addDay() {
-    var newDayNum = Math.max(...Object.keys(daysData).map(Number), 0) + 1;
-    var bonusAmount = parseInt(document.querySelector('input[name="bonus_amount"]').value) || 100;
-    daysData[newDayNum] = bonusAmount;
-    renderDays();
-}
-
-function deleteDay(dayNum) {
-    if (Object.keys(daysData).length <= 1) {
-        return; // Don't allow deleting the last day
-    }
-    delete daysData[dayNum];
-    // Re-index keys
-    var newData = {};
-    var sortedKeys = Object.keys(daysData).map(Number).sort(function(a, b) { return a - b; });
-    sortedKeys.forEach(function(key, index) {
-        newData[index + 1] = daysData[key];
-    });
-    daysData = newData;
-    renderDays();
-}
-
-function updateDay(dayNum, value) {
-    daysData[dayNum] = parseInt(value) || 0;
-    renderDays();
-}
-
-// Update total when bonus amount changes
-var bonusInput = document.querySelector('input[name="bonus_amount"]');
-if (bonusInput) {
-    bonusInput.addEventListener('input', function() {
-        renderDays();
-    });
-}
-
-// Initialize on load
-renderDays();
-});
 </script>
