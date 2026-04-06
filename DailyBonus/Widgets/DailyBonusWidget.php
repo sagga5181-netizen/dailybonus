@@ -97,8 +97,9 @@ class DailyBonusWidget implements WidgetInterface
         ])->render();
     }
 
-    protected function generateBonusDays(int $daysCount, float $baseAmount, array $dayRewards = []): array
+    protected function generateBonusDays(int $daysCount, float $baseAmount, ?array $dayRewards = null): array
     {
+        $dayRewards = $dayRewards ?? [];
         $days = [];
         for ($day = 1; $day <= $daysCount; $day++) {
             $amount = $baseAmount;
