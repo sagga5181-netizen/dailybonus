@@ -18,7 +18,7 @@ class DailyBonusController extends BaseController
             ]);
         }
 
-        $userId = user()->getIdentity();
+        $userId = user()->id;
         
         // Получаем последнюю запись о бонусе
         $lastBonus = UserBonus::select('*')
@@ -41,7 +41,7 @@ class DailyBonusController extends BaseController
         }
 
         // Получаем текущий баланс пользователя
-        $currentUser = user()->getUser();
+        $currentUser = user();
         $currentBalance = (float) ($currentUser->balance ?? 0);
         
         // Сумма бонуса (можно сделать настраиваемой)

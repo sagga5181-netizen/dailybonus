@@ -106,7 +106,7 @@ class DailyBonusWidget implements WidgetInterface
             ];
         }
 
-        $userId = user()->getIdentity();
+        $userId = user()->id;
         $lastBonus = UserBonus::select('*')
             ->where('user_id', $userId)
             ->orderBy('claimed_at', 'DESC')
