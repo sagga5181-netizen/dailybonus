@@ -6,15 +6,11 @@ use Flute\Core\Support\ModuleServiceProvider;
 
 class DailyRewardsServiceProvider extends ModuleServiceProvider
 {
+    public array $extensions = [];
+
     public function boot(\DI\Container $container): void
     {
-        // Only DB entities
-        $this->loadEntities();
-
-        // Load routes
-        require $this->getModulePath('Routes/web.php');
-
-        // Load widget
-        $this->loadWidgets();
+        // Bootstrap module - loads all resources automatically
+        $this->bootstrapModule();
     }
 }

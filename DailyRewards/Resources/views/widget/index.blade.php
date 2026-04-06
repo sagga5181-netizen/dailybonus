@@ -11,7 +11,7 @@
         
         <div class="dr-status">
             @if($canClaim)
-                <button class="dr-btn dr-btn-claim" onclick="claimDailyReward({{ $userId }})">
+                <button class="dr-btn dr-btn-claim" onclick="claimDailyReward()">
                     Получить бонус
                 </button>
             @else
@@ -68,24 +68,3 @@
     cursor: not-allowed;
 }
 </style>
-
-<script>
-function claimDailyReward(userId) {
-    fetch('/api/dailyreward/claim', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({ user_id: userId })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            location.reload();
-        } else {
-            alert(data.message || 'Ошибка');
-        }
-    });
-}
-</script>
