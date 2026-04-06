@@ -6,7 +6,10 @@ use Cycle\ActiveRecord\ActiveRecord;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
+use Cycle\ORM\Entity\Behavior;
+
 #[Entity(table: 'daily_rewards_history')]
+#[Behavior\CreatedAt(field: 'createdAt', column: 'created_at')]
 class DailyRewardHistory extends ActiveRecord
 {
     #[Column(type: 'primary')]
@@ -25,5 +28,5 @@ class DailyRewardHistory extends ActiveRecord
     public float $rewardValue;
 
     #[Column(type: 'datetime', name: 'claimed_at')]
-    public \DateTime $claimedAt;
+    public \DateTimeImmutable $claimedAt;
 }

@@ -264,7 +264,7 @@ class DailyRewardsService
             $history->dayNumber = $currentDay;
             $history->rewardType = $reward->rewardType;
             $history->rewardValue = $reward->rewardValue;
-            $history->claimedAt = new \DateTime();
+            $history->claimedAt = new \DateTimeImmutable();
             $history->save();
 
             // Fire event

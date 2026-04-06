@@ -6,7 +6,11 @@ use Cycle\ActiveRecord\ActiveRecord;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 
+use Cycle\ORM\Entity\Behavior;
+
 #[Entity(table: 'daily_rewards_users')]
+#[Behavior\CreatedAt(field: 'createdAt', column: 'created_at')]
+#[Behavior\UpdatedAt(field: 'updatedAt', column: 'updated_at')]
 class DailyRewardUser extends ActiveRecord
 {
     #[Column(type: 'primary')]
@@ -22,14 +26,14 @@ class DailyRewardUser extends ActiveRecord
     public int $streak = 0;
 
     #[Column(type: 'datetime', name: 'last_claim', nullable: true)]
-    public ?\DateTime $lastClaim = null;
+    public ?\DateTimeImmutable $lastClaim = null;
 
     #[Column(type: 'integer', name: 'total_claimed', default: 0)]
     public int $totalClaimed = 0;
 
-    #[Column(type: 'datetime', name: 'created_at')]
-    public \DateTime $createdAt;
+    #[Column(type: 'datetime')]
+    public \DateTimeImmutable $createdAt;
 
-    #[Column(type: 'datetime', name: 'updated_at')]
-    public \DateTime $updatedAt;
+    #[Column(type: 'datetime', nullable: true)]
+    public ?\DateTimeImmutable $updatedAt = null;
 }
