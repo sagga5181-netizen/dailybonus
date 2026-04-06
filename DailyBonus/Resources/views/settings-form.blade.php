@@ -1,10 +1,10 @@
 <div class="daily-bonus-settings-form">
     <div class="setting-tabs">
         <div class="tab-header">
-            <button type="button" class="tab-link active" data-tab="tab-general" onclick="switchTab(this, 'tab-general')">Основные</button>
-            <button type="button" class="tab-link" data-tab="tab-rewards" onclick="switchTab(this, 'tab-rewards')">Награды</button>
-            <button type="button" class="tab-link" data-tab="tab-cycle" onclick="switchTab(this, 'tab-cycle')">Цикл</button>
-            <button type="button" class="tab-link" data-tab="tab-display" onclick="switchTab(this, 'tab-display')">Оформление</button>
+            <button type="button" class="tab-link active" data-tab="tab-general" onclick="var form=this.closest('.daily-bonus-settings-form');var tabs=form.querySelectorAll('.tab-link');var panes=form.querySelectorAll('.tab-pane');tabs.forEach(function(t){t.classList.remove('active')});panes.forEach(function(p){p.classList.remove('active')});this.classList.add('active');document.getElementById('tab-general').classList.add('active')">Основные</button>
+            <button type="button" class="tab-link" data-tab="tab-rewards" onclick="var form=this.closest('.daily-bonus-settings-form');var tabs=form.querySelectorAll('.tab-link');var panes=form.querySelectorAll('.tab-pane');tabs.forEach(function(t){t.classList.remove('active')});panes.forEach(function(p){p.classList.remove('active')});this.classList.add('active');document.getElementById('tab-rewards').classList.add('active')">Награды</button>
+            <button type="button" class="tab-link" data-tab="tab-cycle" onclick="var form=this.closest('.daily-bonus-settings-form');var tabs=form.querySelectorAll('.tab-link');var panes=form.querySelectorAll('.tab-pane');tabs.forEach(function(t){t.classList.remove('active')});panes.forEach(function(p){p.classList.remove('active')});this.classList.add('active');document.getElementById('tab-cycle').classList.add('active')">Цикл</button>
+            <button type="button" class="tab-link" data-tab="tab-display" onclick="var form=this.closest('.daily-bonus-settings-form');var tabs=form.querySelectorAll('.tab-link');var panes=form.querySelectorAll('.tab-pane');tabs.forEach(function(t){t.classList.remove('active')});panes.forEach(function(p){p.classList.remove('active')});this.classList.add('active');document.getElementById('tab-display').classList.add('active')">Оформление</button>
         </div>
         <div class="tab-content">
             <div id="tab-general" class="tab-pane active">
@@ -105,6 +105,8 @@ $jsonDayRewards = json_encode($dayRewards ?: array_fill(1, max(7, (int)$daysCoun
     gap: 3px;
     border: 1px solid rgba(255,255,255,0.1);
     background: rgba(255,255,255,0.05);
+    position: relative;
+    z-index: 1;
 }
 .daily-bonus-settings-form .setting-tabs .tab-link {
     flex: 1;
@@ -120,8 +122,6 @@ $jsonDayRewards = json_encode($dayRewards ?: array_fill(1, max(7, (int)$daysCoun
     position: relative;
     line-height: 1;
     text-align: center;
-    pointer-events: auto !important;
-    z-index: 10;
 }
 .daily-bonus-settings-form .setting-tabs .tab-link:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
 .daily-bonus-settings-form .setting-tabs .tab-link.active { color: #fff; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); }
