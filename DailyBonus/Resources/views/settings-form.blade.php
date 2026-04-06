@@ -1,10 +1,10 @@
 <div class="daily-bonus-settings-form">
     <div class="setting-tabs">
         <div class="tab-header">
-            <button type="button" class="tab-link active" onclick="switchTab(this, 'tab-general')">Основные</button>
-            <button type="button" class="tab-link" onclick="switchTab(this, 'tab-rewards')">Награды</button>
-            <button type="button" class="tab-link" onclick="switchTab(this, 'tab-cycle')">Цикл</button>
-            <button type="button" class="tab-link" onclick="switchTab(this, 'tab-display')">Оформление</button>
+            <button type="button" class="tab-link active" data-tab="tab-general">Основные</button>
+            <button type="button" class="tab-link" data-tab="tab-rewards">Награды</button>
+            <button type="button" class="tab-link" data-tab="tab-cycle">Цикл</button>
+            <button type="button" class="tab-link" data-tab="tab-display">Оформление</button>
         </div>
         <div class="tab-content">
             <div id="tab-general" class="tab-pane active">
@@ -399,42 +399,42 @@ $jsonDayRewards = json_encode($dayRewards ?: array_fill(1, max(7, (int)$daysCoun
 </style>
 
 <script>
-function switchTab(btn, tabId) {
-    var form = btn.closest('.daily-bonus-settings-form');
-    if (!form) {
-        // Fallback - just use direct document getElementById
-        var tabs = document.querySelectorAll('.daily-bonus-settings-form .tab-link');
-        var panes = document.querySelectorAll('.daily-bonus-settings-form .tab-pane');
-    } else {
-        var tabs = form.querySelectorAll('.tab-link');
-        var panes = form.querySelectorAll('.tab-pane');
+document.addEventListener('DOMContentLoaded', function() {
+    // Tab switching
+    var tabLinks = document.querySelectorAll('.daily-bonus-settings-form .tab-link');
+    var tabPanes = document.querySelectorAll('.daily-bonus-settings-form .tab-pane');
+    
+    tabLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var tabId = this.getAttribute('data-tab');
+            
+            tabLinks.forEach(function(l) { l.classList.remove('active'); });
+            tabPanes.forEach(function(p) { p.classList.remove('active'); });
+            
+            this.classList.add('active');
+            var targetPane = document.getElementById(tabId);
+            if (targetPane) {
+                targetPane.classList.add('active');
+            }
+        });
+    });
+    
+    // Days management - parse JSON properly with fallback
+    try {
+        var daysData = {{ $jsonDayRewards }};
+    } catch(e) {
+        var daysData = {"1":100,"2":100,"3":100,"4":100,"5":100,"6":100,"7":100};
     }
-    
-    tabs.forEach(function(t) { t.classList.remove('active'); });
-    panes.forEach(function(p) { p.classList.remove('active'); });
-    
-    btn.classList.add('active');
-    var targetPane = document.getElementById(tabId);
-    if (targetPane) {
-        targetPane.classList.add('active');
-    }
-}
 
-// Days management - parse JSON properly with fallback
-try {
-    var daysData = {{ $jsonDayRewards }};
-} catch(e) {
-    var daysData = {"1":100,"2":100,"3":100,"4":100,"5":100,"6":100,"7":100};
-}
-
-function renderDays() {
-    var container = document.getElementById('days-list');
-    if (!container) return;
-    
-    container.innerHTML = '';
-    
-    var total = 0;
-    var bonusAmount = parseInt(document.querySelector('input[name="bonus_amount"]').value) || 100;
+    function renderDays() {
+        var container = document.getElementById('days-list');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        var total = 0;
+        var bonusAmount = parseInt(document.querySelector('input[name="bonus_amount"]').value) || 100;
     
     Object.keys(daysData).forEach(function(dayNum) {
         var amount = parseInt(daysData[dayNum]) || 0;
@@ -495,12 +495,14 @@ function updateDay(dayNum, value) {
 }
 
 // Update total when bonus amount changes
-document.querySelector('input[name="bonus_amount"]').addEventListener('input', function() {
-    renderDays();
-});
+var bonusInput = document.querySelector('input[name="bonus_amount"]');
+if (bonusInput) {
+    bonusInput.addEventListener('input', function() {
+        renderDays();
+    });
+}
 
 // Initialize on load
-document.addEventListener('DOMContentLoaded', function() {
-    renderDays();
+renderDays();
 });
 </script>
