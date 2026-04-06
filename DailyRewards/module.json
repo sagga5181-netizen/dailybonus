@@ -1,6 +1,6 @@
 {
     "name": "DailyRewards",
-    "version": "1.0.14",
+    "version": "1.0.15",
     "description": "Система ежедневных наград с сериями и гибкой настройкой",
     "authors": ["Developer"],
     "url": "https://github.com/sagga5181-netizen/dailybonus",
@@ -12,5 +12,20 @@
     },
     "permissions": [
         "dailyrewards.manage"
-    ]
+    ],
+    "configs": {
+        "enabled": "1",
+        "cooldown_hours": "24",
+        "timezone": "UTC",
+        "reset_on_miss": "0",
+        "max_days": "7",
+        "theme": "default",
+        "show_animations": "1",
+        "title_text": "",
+        "button_text": "",
+        "cooldown_text": "",
+        "custom_css": "",
+        "api_key": "",
+        "webhook_url": ""
+    }
 }

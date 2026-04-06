@@ -6,18 +6,25 @@ use Flute\Core\Support\ModuleServiceProvider;
 
 class DailyRewardsServiceProvider extends ModuleServiceProvider
 {
-    public function register(\DI\Container $container): void
-    {
-        // Parent class automatically loads entities from database/Entities
-    }
-
+    /**
+     * Load entities, configs, views, translations, SCSS, routes, widgets
+     */
     public function boot(\DI\Container $container): void
     {
+        // Only DB entities
+        $this->loadEntities();
+
+        // Only configuration
+        $this->loadConfigs();
+
+        // Only translations
+        $this->loadTranslations();
+
         // Load SCSS styles
         $this->loadScss('Resources/assets/scss/daily-rewards.scss');
 
-        // Load routes - use absolute path from module directory
-        require $this->getModulePath('Routes/web.php');
+        // Load routes from file
+        $this->loadRoutesFrom('Routes/web.php');
 
         // Load views
         $this->loadViews('Resources/views', 'dailyrewards');
