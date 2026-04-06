@@ -1,8 +1,11 @@
 {
     "name": "DailyRewards",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Система ежедневных наград с сериями и гибкой настройкой",
     "authors": ["Developer"],
+    "repository": "https://github.com/sagga5181-netizen/dailybonus.git",
+    "homepage": "https://github.com/sagga5181-netizen/dailybonus",
+    "releases": "https://api.github.com/repos/sagga5181-netizen/dailybonus/releases",
     "providers": [
         "Flute\\Modules\\DailyRewards\\Providers\\DailyRewardsServiceProvider"
     ],
