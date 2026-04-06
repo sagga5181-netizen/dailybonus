@@ -12,7 +12,7 @@ class DailyBonusProvider extends ModuleServiceProvider
     {
         $this->loadEntities();
         $this->loadViews('Resources/views', 'dailybonus');
-        $this->loadTranslations();
+        $this->loadTranslations('Resources/lang');
         $this->bootstrapModule();
     }
 }
