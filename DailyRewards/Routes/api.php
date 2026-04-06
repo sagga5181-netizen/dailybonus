@@ -8,15 +8,15 @@ Route::post('/api/dailyreward/claim', function() {
     if (!$user) {
         return response()->json(['success' => false, 'message' => 'Not authorized']);
     }
-    
+
     $data = request()->all();
     $day = $data['day'] ?? 1;
-    
+
     // Get user progress
     $progress = \Flute\Modules\DailyRewards\Database\Entities\DailyRewardUser::query()
         ->where('userId', $user->id)
         ->fetchOne();
-    
+
     if (!$progress) {
         $progress = new \Flute\Modules\DailyRewards\Database\Entities\DailyRewardUser();
         $progress->userId = $user->id;
@@ -32,7 +32,7 @@ Route::post('/api/dailyreward/claim', function() {
             $diffHours = ($now->getTimestamp() - $lastClaim->getTimestamp()) / 3600;
             
             if ($diffHours < 24) {
-                return response()->json(['success' => false, 'message' => 'Wait for next day']);
+                return response()->json(['success' => false, 'message' => 'Подождите до следующего дня']);
             }
         }
         
@@ -57,12 +57,6 @@ Route::post('/api/dailyreward/claim', function() {
         ->where('isActive', true)
         ->fetchOne();
     
-    if ($reward && $reward->balance > 0) {
-        // Add balance to user (implement user balance system)
-        // For now just log
-        // user()->addBalance($reward->balance);
-    }
-    
     $progress->lastClaim = new \DateTimeImmutable();
     $progress->save();
     
@@ -71,4 +65,4 @@ Route::post('/api/dailyreward/claim', function() {
         'day' => $progress->currentDay,
         'balance' => $reward ? $reward->balance : 0
     ]);
-})->name('api.dailyreward.claim');
+});

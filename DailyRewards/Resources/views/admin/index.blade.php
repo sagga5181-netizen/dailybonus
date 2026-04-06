@@ -1,7 +1,7 @@
 <div class="daily-rewards-admin">
     <h2>Ежедневные бонусы</h2>
     
-    <form method="POST" action="{{ route('admin.dailyrewards.save') }}" class="reward-form">
+    <form method="POST" action="/admin/dailyrewards/save" class="reward-form">
         @csrf
         <input type="hidden" name="id" value="">
         
@@ -59,7 +59,7 @@
                             data-day="{{ $reward->dayNumber }}"
                             data-image="{{ $reward->image }}"
                             data-balance="{{ $reward->balance }}">Редактировать</button>
-                    <a href="{{ route('admin.dailyrewards.delete', $reward->id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Удалить?')">Удалить</a>
+                    <a href="/admin/dailyrewards/delete/{{ $reward->id }}" class="btn btn-sm btn-danger" onclick="return confirm('Удалить?')">Удалить</a>
                 </td>
             </tr>
             @endforeach

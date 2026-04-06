@@ -7,7 +7,7 @@ use Flute\Modules\DailyRewards\Database\Entities\DailyReward;
 Route::get('/admin/dailyrewards', function() {
     $rewards = DailyReward::query()->orderBy('dayNumber', 'ASC')->fetchAll();
     return view('dailyrewards_admin::index', ['rewards' => $rewards]);
-})->name('admin.dailyrewards.index');
+});
 
 // Admin: Save reward
 Route::post('/admin/dailyrewards/save', function() {
@@ -30,8 +30,8 @@ Route::post('/admin/dailyrewards/save', function() {
         $reward->save();
     }
 
-    return redirect()->route('admin.dailyrewards.index');
-})->name('admin.dailyrewards.save');
+    return redirect('/admin/dailyrewards');
+});
 
 // Admin: Delete reward
 Route::get('/admin/dailyrewards/delete/{id}', function(int $id) {
@@ -39,5 +39,5 @@ Route::get('/admin/dailyrewards/delete/{id}', function(int $id) {
     if ($reward) {
         $reward->delete();
     }
-    return redirect()->route('admin.dailyrewards.index');
-})->name('admin.dailyrewards.delete');
+    return redirect('/admin/dailyrewards');
+});
