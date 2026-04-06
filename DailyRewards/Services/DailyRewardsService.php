@@ -112,12 +112,23 @@ class DailyRewardsService
         $reward = DailyReward::query()->where('dayNumber', $data['day_number'])->fetchOne();
 
         if ($reward) {
-            $reward->update($data);
+            $reward->dayNumber = $data['day_number'] ?? $reward->dayNumber;
+            $reward->rewardType = $data['reward_type'] ?? $reward->rewardType;
+            $reward->rewardValue = $data['reward_value'] ?? $reward->rewardValue;
+            $reward->rewardData = $data['reward_data'] ?? $reward->rewardData;
+            $reward->icon = $data['icon'] ?? $reward->icon;
+            $reward->name = $data['name'] ?? $reward->name;
+            $reward->isActive = $data['is_active'] ?? $reward->isActive;
+            $reward->save();
         } else {
             $reward = new DailyReward();
-            foreach ($data as $key => $value) {
-                $reward->$key = $value;
-            }
+            $reward->dayNumber = $data['day_number'] ?? 1;
+            $reward->rewardType = $data['reward_type'] ?? 'coins';
+            $reward->rewardValue = $data['reward_value'] ?? 0;
+            $reward->rewardData = $data['reward_data'] ?? null;
+            $reward->icon = $data['icon'] ?? null;
+            $reward->name = $data['name'] ?? null;
+            $reward->isActive = $data['is_active'] ?? true;
             $reward->save();
         }
     }
