@@ -23,12 +23,7 @@ class DailyRewardsServiceProvider extends ModuleServiceProvider
         // Load API routes
         $this->loadRoutesFrom('Routes/api.php');
 
-        // Load admin routes
+        // Load admin routes (for module settings page)
         $this->loadRoutesFrom('Routes/admin.php');
-
-        // Load admin package
-        if (is_admin_path() && user()->can('admin')) {
-            $this->loadPackage(new DailyRewardsAdminPackage());
-        }
     }
 }
