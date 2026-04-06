@@ -2,6 +2,7 @@
 
 namespace Flute\Modules\DailyBonus\Database\Entities;
 
+use Flute\Core\Database\Entities\User as BaseUser;
 use Cycle\Annotated\Annotation\Column;
 use Cycle\Annotated\Annotation\Entity;
 use Cycle\Annotated\Annotation\Table;
@@ -11,7 +12,7 @@ use Cycle\Annotated\Annotation\Table\Index;
 #[Table(indexes: [
     new Index(columns: ['user_id', 'claimed_at']),
 ])]
-class UserBonus
+class UserBonus extends \Flute\Core\Database\Entities\Entity
 {
     #[Column(type: 'primary')]
     public int $id;
