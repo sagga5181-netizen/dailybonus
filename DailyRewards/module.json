@@ -12,7 +12,7 @@
     "minimumFluteVersion": "1.0.0",
     "autoload": {
         "psr-4": {
-            "DailyRewards\\": ""
+            "Flute\\Modules\\DailyRewards\\": ""
         }
     },
     "assets": {
