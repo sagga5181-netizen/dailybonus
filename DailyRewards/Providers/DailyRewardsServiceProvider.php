@@ -3,7 +3,7 @@
 namespace Flute\Modules\DailyRewards\Providers;
 
 use Flute\Core\Support\ModuleServiceProvider;
-use Flute\Core\Admin\AdminPanel;
+use Flute\Admin\AdminPanel;
 
 class DailyRewardsServiceProvider extends ModuleServiceProvider
 {
