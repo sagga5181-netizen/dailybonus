@@ -3,6 +3,7 @@
 namespace Flute\Modules\DailyRewards\Widgets;
 
 use Flute\Modules\DailyRewards\Database\Entities\DailyRewardUser;
+use Flute\Modules\DailyRewards\Database\Entities\DailyReward;
 use Flute\Core\Modules\Page\Widgets\Contracts\WidgetInterface;
 
 class DailyRewardsWidget implements WidgetInterface
@@ -60,6 +61,9 @@ class DailyRewardsWidget implements WidgetInterface
             $progress->save();
         }
 
+        // Get all rewards
+        $rewards = DailyReward::query()->where('isActive', true)->orderBy('dayNumber', 'ASC')->fetchAll();
+
         // Check if can claim
         $canClaim = false;
         $cooldownHours = 24;
@@ -78,12 +82,23 @@ class DailyRewardsWidget implements WidgetInterface
         $currentDay = $progress->currentDay;
         $streak = $progress->streak;
 
+        // Get current day reward
+        $currentReward = null;
+        foreach ($rewards as $r) {
+            if ($r->dayNumber == $currentDay) {
+                $currentReward = $r;
+                break;
+            }
+        }
+
         return view('dailyrewards::widget.index', [
             'title' => $title,
             'showStreak' => $showStreak,
             'currentDay' => $currentDay,
             'streak' => $streak,
             'canClaim' => $canClaim,
+            'rewards' => $rewards,
+            'currentReward' => $currentReward,
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace Flute\Modules\DailyRewards\Providers;
 
 use Flute\Core\Support\ModuleServiceProvider;
+use Flute\Modules\DailyRewards\Admin\Package\DailyRewardsAdminPackage;
 
 class DailyRewardsServiceProvider extends ModuleServiceProvider
 {
@@ -18,5 +19,16 @@ class DailyRewardsServiceProvider extends ModuleServiceProvider
         
         // Load widgets
         $this->loadWidgets();
+
+        // Load API routes
+        $this->loadRoutesFrom('Routes/api.php');
+
+        // Load admin routes
+        $this->loadRoutesFrom('Routes/admin.php');
+
+        // Load admin package
+        if (is_admin_path() && user()->can('admin')) {
+            $this->loadPackage(new DailyRewardsAdminPackage());
+        }
     }
 }
