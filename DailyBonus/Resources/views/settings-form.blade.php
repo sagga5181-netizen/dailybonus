@@ -398,21 +398,36 @@ $jsonDayRewards = json_encode($dayRewards ?: array_fill(1, 7, $bonusAmount));
 <script>
 function switchTab(btn, tabId) {
     var form = btn.closest('.daily-bonus-settings-form');
-    var tabs = form.querySelectorAll('.tab-link');
-    var panes = form.querySelectorAll('.tab-pane');
+    if (!form) {
+        // Fallback - just use direct document getElementById
+        var tabs = document.querySelectorAll('.daily-bonus-settings-form .tab-link');
+        var panes = document.querySelectorAll('.daily-bonus-settings-form .tab-pane');
+    } else {
+        var tabs = form.querySelectorAll('.tab-link');
+        var panes = form.querySelectorAll('.tab-pane');
+    }
     
     tabs.forEach(function(t) { t.classList.remove('active'); });
     panes.forEach(function(p) { p.classList.remove('active'); });
     
     btn.classList.add('active');
-    document.getElementById(tabId).classList.add('active');
+    var targetPane = document.getElementById(tabId);
+    if (targetPane) {
+        targetPane.classList.add('active');
+    }
 }
 
-// Days management - parse JSON properly
-var daysData = {{ $jsonDayRewards }};
+// Days management - parse JSON properly with fallback
+try {
+    var daysData = {{ $jsonDayRewards }};
+} catch(e) {
+    var daysData = {"1":100,"2":100,"3":100,"4":100,"5":100,"6":100,"7":100};
+}
 
 function renderDays() {
     var container = document.getElementById('days-list');
+    if (!container) return;
+    
     container.innerHTML = '';
     
     var total = 0;
