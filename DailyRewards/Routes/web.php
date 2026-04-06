@@ -1,14 +1,50 @@
 <?php
 
-use Flute\Core\Router\Router;
+use Flute\Routing\Route;
 
-return function (Router $router) {
-    // Admin routes
-    $router->screen('/admin/daily-rewards', '\Flute\Modules\DailyRewards\Admin\Screens\DailyRewardsScreen', 'dailyrewards.admin.index');
-
-    // API routes
-    $router->post('/api/daily-rewards/claim', '\Flute\Modules\DailyRewards\Http\Controllers\DailyRewardsController@claim');
-    $router->get('/api/daily-rewards/status', '\Flute\Modules\DailyRewards\Http\Controllers\DailyRewardsController@status');
-    $router->get('/api/daily-rewards/history', '\Flute\Modules\DailyRewards\Http\Controllers\DailyRewardsController@history');
-    $router->get('/api/daily-rewards/can-claim', '\Flute\Modules\DailyRewards\Http\Controllers\DailyRewardsController@canClaim');
-};
+// Simple claim API
+Route::post('/api/dailyreward/claim', function() {
+    $user = user();
+    if (!$user) {
+        return response()->json(['success' => false, 'message' => 'Not authorized']);
+    }
+    
+    $userId = $user->id;
+    
+    // Get user progress
+    $progress = \Flute\Modules\DailyRewards\Database\Entities\DailyRewardUser::query()
+        ->where('userId', $userId)
+        ->fetchOne();
+    
+    if (!$progress) {
+        $progress = new \Flute\Modules\DailyRewards\Database\Entities\DailyRewardUser();
+        $progress->userId = $userId;
+        $progress->currentDay = 1;
+        $progress->streak = 0;
+    } else {
+        // Check cooldown
+        if ($progress->lastClaim) {
+            $lastClaim = $progress->lastClaim instanceof \DateTimeImmutable 
+                ? $progress->lastClaim 
+                : new \DateTimeImmutable($progress->lastClaim);
+            $now = new \DateTimeImmutable();
+            $diffHours = ($now->getTimestamp() - $lastClaim->getTimestamp()) / 3600;
+            
+            if ($diffHours < 24) {
+                return response()->json(['success' => false, 'message' => 'Wait for next day']);
+            }
+        }
+        
+        // Increment day
+        $progress->currentDay = $progress->currentDay + 1;
+        if ($progress->currentDay > 7) {
+            $progress->currentDay = 1;
+            $progress->streak = $progress->streak + 1;
+        }
+    }
+    
+    $progress->lastClaim = new \DateTimeImmutable();
+    $progress->save();
+    
+    return response()->json(['success' => true, 'day' => $progress->currentDay]);
+});

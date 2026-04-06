@@ -2,150 +2,116 @@
 
 namespace Flute\Modules\DailyRewards\Widgets;
 
-use Flute\Modules\DailyRewards\Services\DailyRewardsService;
+use Flute\Modules\DailyRewards\Database\Entities\DailyRewardUser;
+use Flute\Modules\DailyRewards\Database\Entities\DailyReward;
 use Flute\Core\Modules\Page\Widgets\Contracts\WidgetInterface;
 
 class DailyRewardsWidget implements WidgetInterface
 {
-    /**
-     * Returns the unique name of the widget.
-     */
     public function getName(): string
     {
-        return 'dailyrewards';
+        return 'dailyreward';
     }
 
-    /**
-     * Returns the widget's icon.
-     */
     public function getIcon(): string
     {
         return 'gift';
     }
 
-    /**
-     * Returns the widget's default settings.
-     */
     public function getSettings(): array
     {
-        return [
-            'theme' => 'default',
-        ];
+        return [];
     }
 
-    /**
-     * Renders the widget with the given settings.
-     */
     public function render(array $settings): ?string
     {
         $user = user();
-        
         if (!$user) {
             return '';
         }
 
-        $service = new DailyRewardsService();
+        // Get user progress
+        $progress = DailyRewardUser::query()->where('userId', $user->id)->fetchOne();
 
-        // Check if module is enabled
-        if (!$service->getConfig('enabled')) {
-            return '';
+        // Create progress if not exists
+        if (!$progress) {
+            $progress = new DailyRewardUser();
+            $progress->userId = $user->id;
+            $progress->currentDay = 1;
+            $progress->streak = 0;
+            $progress->save();
         }
 
-        $config = $service->getAllConfig();
-        $rewards = $service->getRewards(true);
-        $progress = $service->getUserProgress($user->id);
-        $canClaim = $service->canClaim($user->id);
-        $timeUntil = $service->getTimeUntilNextClaim($user->id);
+        // Get all rewards
+        $rewards = DailyReward::query()->where('isActive', true)->orderBy('dayNumber', 'ASC')->fetchAll();
+
+        // Check if can claim
+        $canClaim = false;
+        $cooldownHours = 24;
         
-        $maxDays = (int)$service->getConfig('max_days', 7);
-        $theme = $settings['theme'] ?? $service->getConfig('theme', 'default');
+        if ($progress->lastClaim) {
+            $lastClaim = $progress->lastClaim instanceof \DateTimeImmutable 
+                ? $progress->lastClaim 
+                : new \DateTimeImmutable($progress->lastClaim);
+            $now = new \DateTimeImmutable();
+            $diffHours = ($now->getTimestamp() - $lastClaim->getTimestamp()) / 3600;
+            $canClaim = $diffHours >= $cooldownHours;
+        } else {
+            $canClaim = true;
+        }
+
+        $currentDay = $progress->currentDay;
+        $streak = $progress->streak;
 
         return view('dailyrewards::widget.index', [
-            'config' => $config,
             'rewards' => $rewards,
-            'progress' => $progress,
+            'currentDay' => $currentDay,
+            'streak' => $streak,
             'canClaim' => $canClaim,
-            'timeUntil' => $timeUntil,
-            'maxDays' => $maxDays,
-            'theme' => $theme,
             'userId' => $user->id,
         ]);
     }
 
-    /**
-     * Renders the form for editing the widget's settings.
-     */
-    public function renderSettingsForm(array $settings): string|bool
+    public function renderSettingsForm(array $settings): string
     {
-        return '<div class="form-group">
-            <label>Тема</label>
-            <select name="settings[theme]" class="form-control">
-                <option value="default" ' . ($settings['theme'] ?? 'default' === 'default' ? 'selected' : '') . '>По умолчанию</option>
-                <option value="dark" ' . ($settings['theme'] ?? '' === 'dark' ? 'selected' : '') . '>Тёмная</option>
-                <option value="light" ' . ($settings['theme'] ?? '' === 'light' ? 'selected' : '') . '>Светлая</option>
-            </select>
-        </div>';
+        return '';
     }
 
-    /**
-     * Validates the widget's settings before saving.
-     */
     public function validateSettings(array $input): true|array
     {
         return true;
     }
 
-    /**
-     * Saves the widget's settings.
-     */
     public function saveSettings(array $input): array
     {
         return $input;
     }
 
-    /**
-     * Returns the default grid width of the widget.
-     */
     public function getDefaultWidth(): int
     {
         return 12;
     }
 
-    /**
-     * Returns the minimum grid width of the widget.
-     */
     public function getMinWidth(): int
     {
-        return 3;
+        return 6;
     }
 
-    /**
-     * Checks if the widget has a settings form.
-     */
     public function hasSettings(): bool
     {
-        return true;
+        return false;
     }
 
-    /**
-     * Returns the toolbar buttons for the widget.
-     */
     public function getButtons(): array
     {
         return [];
     }
 
-    /**
-     * Handles a widget action.
-     */
     public function handleAction(string $action, ?string $widgetId = null): array
     {
         return [];
     }
 
-    /**
-     * Returns the category of the widget.
-     */
     public function getCategory(): string
     {
         return 'rewards';
