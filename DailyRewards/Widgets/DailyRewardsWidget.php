@@ -87,11 +87,6 @@ class DailyRewardsWidget implements WidgetInterface
         ]);
     }
 
-    public function renderSettingsForm(array $settings): string
-    {
-        return '';
-    }
-
     public function validateSettings(array $input): true|array
     {
         return true;
