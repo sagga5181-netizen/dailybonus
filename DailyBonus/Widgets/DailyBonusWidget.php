@@ -1,11 +1,8 @@
 <?php
 
-
 namespace Flute\Modules\DailyBonus\Widgets;
 
-
 use Flute\Core\Modules\Page\Widgets\Contracts\WidgetInterface;
-
 use Flute\Modules\DailyBonus\Database\Entities\UserBonus;
 
 class DailyBonusWidget implements WidgetInterface
@@ -107,10 +104,7 @@ class DailyBonusWidget implements WidgetInterface
         }
 
         $userId = user()->id;
-        $lastBonus = UserBonus::query()
-            ->where('user_id', $userId)
-            ->orderBy('claimed_at', 'DESC')
-            ->first();
+        $lastBonus = UserBonus::findOne(['user_id' => $userId], ['orderBy' => ['claimed_at' => 'DESC']]);
 
         $canClaim = true;
         $nextClaimTime = null;
@@ -130,7 +124,7 @@ class DailyBonusWidget implements WidgetInterface
             $currentDay = $lastBonus->day_number + 1;
         }
 
-        $allBonuses = UserBonus::query()->where('user_id', $userId)->all();
+        $allBonuses = UserBonus::findAll(['user_id' => $userId]);
         $totalClaimed = 0;
         foreach ($allBonuses as $bonus) {
             $totalClaimed += $bonus->amount;

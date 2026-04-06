@@ -19,14 +19,8 @@ class DailyBonusController extends BaseController
         }
 
         $userId = user()->id;
-        
-        // Получаем последнюю запись о бонусе
-        $lastBonus = UserBonus::query()
-            ->where('user_id', $userId)
-            ->orderBy('claimed_at', 'DESC')
-            ->first();
+        $lastBonus = UserBonus::findOne(['user_id' => $userId], ['orderBy' => ['claimed_at' => 'DESC']]);
 
-        // Проверяем, получал ли уже бонус сегодня
         if ($lastBonus) {
             $lastClaimDate = new \DateTime($lastBonus->claimed_at);
             $today = new \DateTime();
@@ -40,18 +34,13 @@ class DailyBonusController extends BaseController
             }
         }
 
-        // Получаем текущий баланс пользователя
         $currentUser = user();
         $currentBalance = (float) ($currentUser->balance ?? 0);
-        
-        // Сумма бонуса (можно сделать настраиваемой)
         $bonusAmount = 100;
-        
-        // Обновляем баланс
+
         $currentUser->balance = $currentBalance + $bonusAmount;
         $currentUser->save();
 
-        // Записываем в историю бонусов
         $bonusRecord = new UserBonus();
         $bonusRecord->user_id = $userId;
         $bonusRecord->amount = $bonusAmount;
