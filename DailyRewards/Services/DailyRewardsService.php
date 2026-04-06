@@ -84,10 +84,10 @@ class DailyRewardsService
      */
     public function getRewards(bool $activeOnly = false)
     {
-        $query = DailyReward::query()->orderBy('day_number', 'ASC');
+        $query = DailyReward::query()->orderBy('dayNumber', 'ASC');
 
         if ($activeOnly) {
-            $query->where('is_active', true);
+            $query->where('isActive', true);
         }
 
         return $query->fetchAll();
@@ -99,8 +99,8 @@ class DailyRewardsService
     public function getRewardByDay(int $dayNumber): ?DailyReward
     {
         return DailyReward::query()
-            ->where('day_number', $dayNumber)
-            ->where('is_active', true)
+            ->where('dayNumber', $dayNumber)
+            ->where('isActive', true)
             ->fetchOne();
     }
 
@@ -109,7 +109,7 @@ class DailyRewardsService
      */
     public function saveReward(array $data): void
     {
-        $reward = DailyReward::query()->where('day_number', $data['day_number'])->fetchOne();
+        $reward = DailyReward::query()->where('dayNumber', $data['day_number'])->fetchOne();
 
         if ($reward) {
             $reward->update($data);
@@ -127,7 +127,7 @@ class DailyRewardsService
      */
     public function deleteReward(int $dayNumber): void
     {
-        DailyReward::query()->where('day_number', $dayNumber)->delete();
+        DailyReward::query()->where('dayNumber', $dayNumber)->delete();
     }
 
     /**
@@ -135,12 +135,12 @@ class DailyRewardsService
      */
     public function getUserProgress(int $userId): ?DailyRewardUser
     {
-        $progress = DailyRewardUser::query()->where('user_id', $userId)->fetchOne();
+        $progress = DailyRewardUser::query()->where('userId', $userId)->fetchOne();
 
         if (!$progress) {
             $progress = new DailyRewardUser();
-            $progress->user_id = $userId;
-            $progress->current_day = 1;
+            $progress->userId = $userId;
+            $progress->currentDay = 1;
             $progress->streak = 0;
             $progress->save();
         }
@@ -249,11 +249,11 @@ class DailyRewardsService
 
             // Log history
             $history = new DailyRewardHistory();
-            $history->user_id = $userId;
-            $history->day_number = $currentDay;
-            $history->reward_type = $reward->rewardType;
-            $history->reward_value = $reward->rewardValue;
-            $history->claimed_at = new \DateTime();
+            $history->userId = $userId;
+            $history->dayNumber = $currentDay;
+            $history->rewardType = $reward->rewardType;
+            $history->rewardValue = $reward->rewardValue;
+            $history->claimedAt = new \DateTime();
             $history->save();
 
             // Fire event
@@ -312,8 +312,8 @@ class DailyRewardsService
     public function getUserHistory(int $userId, int $limit = 30): array
     {
         return DailyRewardHistory::query()
-            ->where('user_id', $userId)
-            ->orderBy('claimed_at', 'DESC')
+            ->where('userId', $userId)
+            ->orderBy('claimedAt', 'DESC')
             ->limit($limit)
             ->fetchAll();
     }
