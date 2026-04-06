@@ -70,10 +70,10 @@ class DailyRewardsService
             $config->value = $value;
             $config->save();
         } else {
-            DailyRewardConfig::create([
-                'key' => $key,
-                'value' => $value,
-            ]);
+            $config = new DailyRewardConfig();
+            $config->key = $key;
+            $config->value = $value;
+            $config->save();
         }
 
         $this->config[$key] = $value;
@@ -114,7 +114,11 @@ class DailyRewardsService
         if ($reward) {
             $reward->update($data);
         } else {
-            DailyReward::create($data);
+            $reward = new DailyReward();
+            foreach ($data as $key => $value) {
+                $reward->$key = $value;
+            }
+            $reward->save();
         }
     }
 
@@ -134,11 +138,11 @@ class DailyRewardsService
         $progress = DailyRewardUser::query()->where('user_id', $userId)->fetchOne();
 
         if (!$progress) {
-            $progress = DailyRewardUser::create([
-                'user_id' => $userId,
-                'current_day' => 1,
-                'streak' => 0,
-            ]);
+            $progress = new DailyRewardUser();
+            $progress->user_id = $userId;
+            $progress->current_day = 1;
+            $progress->streak = 0;
+            $progress->save();
         }
 
         return $progress;
@@ -244,13 +248,13 @@ class DailyRewardsService
             $progress->save();
 
             // Log history
-            DailyRewardHistory::create([
-                'user_id' => $userId,
-                'day_number' => $currentDay,
-                'reward_type' => $reward->rewardType,
-                'reward_value' => $reward->rewardValue,
-                'claimed_at' => new \DateTime(),
-            ]);
+            $history = new DailyRewardHistory();
+            $history->user_id = $userId;
+            $history->day_number = $currentDay;
+            $history->reward_type = $reward->rewardType;
+            $history->reward_value = $reward->rewardValue;
+            $history->claimed_at = new \DateTime();
+            $history->save();
 
             // Fire event
             events()->dispatch('dailyrewards.claimed', [
