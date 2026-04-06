@@ -70,8 +70,8 @@
     border-radius: 50px;
     padding: 3px;
     gap: 3px;
-    border: 1px solid rgba(0,0,0,0.1);
-    background: rgba(0,0,0,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
 }
 .daily-bonus-settings-form .setting-tabs .tab-link {
     flex: 1;
@@ -79,7 +79,7 @@
     cursor: pointer;
     border: none;
     background: transparent;
-    color: #6c757d;
+    color: rgba(255,255,255,0.5);
     font-weight: 500;
     font-size: 13px;
     border-radius: 50px;
@@ -88,57 +88,65 @@
     line-height: 1;
     text-align: center;
 }
-.daily-bonus-settings-form .setting-tabs .tab-link:hover { background: rgba(0,0,0,0.05); color: #495057; }
-.daily-bonus-settings-form .setting-tabs .tab-link.active { color: #fff; background: #0d6efd; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-/* Tab content - убираем белый фон, делаем прозрачным */
+.daily-bonus-settings-form .setting-tabs .tab-link:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.7); }
+.daily-bonus-settings-form .setting-tabs .tab-link.active { color: #fff; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); }
+/* Tab content - используем темный фон как в Hero */
 .daily-bonus-settings-form .setting-tabs .tab-content { 
-    background: transparent; 
+    background: rgba(0,0,0,0.2);
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid rgba(255,255,255,0.05);
 }
 .daily-bonus-settings-form .setting-tabs .tab-pane { 
     display: none; 
     flex-direction: column; 
-    gap: 12px; 
-    padding: 0;
+    gap: 16px; 
 }
 .daily-bonus-settings-form .setting-tabs .tab-pane.active { 
     display: flex; 
 }
-/* Стильные элементы формы без фона */
+/* Стильные элементы формы - темная тема */
 .daily-bonus-settings-form .mb-3 {
-    background: transparent;
-    padding: 8px 12px;
-    border-radius: 8px;
+    background: rgba(255,255,255,0.03);
+    padding: 12px 16px;
+    border-radius: 12px;
     transition: background 0.2s;
+    border: 1px solid rgba(255,255,255,0.03);
 }
 .daily-bonus-settings-form .mb-3:hover {
-    background: rgba(0,0,0,0.02);
+    background: rgba(255,255,255,0.06);
 }
 .daily-bonus-settings-form .form-label {
-    color: #495057;
+    color: rgba(255,255,255,0.7);
     font-weight: 500;
     font-size: 13px;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    display: block;
 }
 .daily-bonus-settings-form .form-control {
-    background: rgba(255,255,255,0.5);
-    border: 1px solid rgba(0,0,0,0.08);
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
     border-radius: 10px;
     padding: 12px 16px;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 500;
-    color: #2d3436;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+    color: #fff;
+    transition: all 0.25s;
+    width: 100%;
+}
+.daily-bonus-settings-form .form-control::placeholder {
+    color: rgba(255,255,255,0.3);
 }
 .daily-bonus-settings-form .form-control:hover {
-    border-color: rgba(13,110,253,0.3);
-    background: rgba(255,255,255,0.7);
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.4);
 }
 .daily-bonus-settings-form .form-control:focus {
-    background: rgba(255,255,255,0.95);
-    border-color: #0d6efd;
-    box-shadow: 0 0 0 4px rgba(13,110,253,0.12), inset 0 2px 4px rgba(0,0,0,0.02);
+    background: rgba(0,0,0,0.5);
+    border-color: rgba(255,255,255,0.3);
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
     outline: none;
+    color: #fff;
 }
 /* Remove number input arrows for cleaner look */
 .daily-bonus-settings-form input[type="number"]::-webkit-outer-spin-button,
@@ -150,11 +158,11 @@
     -moz-appearance: textfield;
 }
 .daily-bonus-settings-form .input-group-text {
-    background: rgba(255,255,255,0.4);
-    border: 1px solid rgba(0,0,0,0.08);
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
     border-right: none;
     border-radius: 10px 0 0 10px;
-    color: #636e72;
+    color: rgba(255,255,255,0.6);
     font-weight: 600;
     padding: 12px 14px;
 }
@@ -167,6 +175,7 @@
     font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
     line-height: 1.5;
     resize: vertical;
+    min-height: 80px;
 }
 .daily-bonus-settings-form .btn {
     border-radius: 8px;
@@ -174,39 +183,54 @@
     font-weight: 500;
     padding: 8px 14px;
     transition: all 0.2s;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.8);
+}
+.daily-bonus-settings-form .btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
 }
 .daily-bonus-settings-form .alert {
-    border-radius: 8px;
+    border-radius: 12px;
     border: none;
-    padding: 10px 14px;
+    padding: 14px 18px;
 }
 .daily-bonus-settings-form .alert-info {
-    background: rgba(13,110,253,0.1);
-    color: #0d6efd;
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+.daily-bonus-settings-form .text-success {
+    color: #4ade80 !important;
 }
 .daily-bonus-settings-form .form-check {
-    padding: 8px 12px;
-    border-radius: 8px;
+    padding: 10px 14px;
+    border-radius: 10px;
     transition: background 0.2s;
+    display: flex;
+    align-items: center;
 }
 .daily-bonus-settings-form .form-check:hover {
-    background: rgba(0,0,0,0.02);
+    background: rgba(255,255,255,0.05);
 }
 .daily-bonus-settings-form .form-check-input {
     width: 44px;
     height: 24px;
     border-radius: 12px;
     cursor: pointer;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
 }
 .daily-bonus-settings-form .form-check-input:checked {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+    background: #3b82f6;
+    border-color: #3b82f6;
 }
 .daily-bonus-settings-form .form-check-label {
-    color: #495057;
+    color: rgba(255,255,255,0.8);
     font-size: 14px;
     cursor: pointer;
+    margin-left: 8px;
 }
 .daily-bonus-settings-form .form-control-color {
     width: 50px;
@@ -214,12 +238,17 @@
     padding: 4px;
     border-radius: 8px;
     cursor: pointer;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
 }
 .daily-bonus-settings-form .row {
     margin: 0 -8px;
 }
 .daily-bonus-settings-form .col-md-6 {
     padding: 0 8px;
+}
+.daily-bonus-settings-form .mt-1 {
+    margin-top: 8px;
 }
 </style>
 
