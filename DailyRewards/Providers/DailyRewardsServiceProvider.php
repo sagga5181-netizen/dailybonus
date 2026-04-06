@@ -2,14 +2,13 @@
 
 namespace Flute\Modules\DailyRewards\Providers;
 
-use Flute\Core\ModulesManager\Contracts\ModuleExtensionInterface;
+use Flute\Core\Support\ModuleServiceProvider;
 use Flute\Core\Database\Cycle\EntityHandler;
-use Flute\Core\Router\Router;
 use Flute\Core\Admin\AdminPanel;
 
-class DailyRewardsServiceProvider implements ModuleExtensionInterface
+class DailyRewardsServiceProvider extends ModuleServiceProvider
 {
-    public function register(): void
+    public function register(\DI\Container $container): void
     {
         // Database entities
         $this->loadEntities();
