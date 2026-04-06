@@ -11,14 +11,14 @@
                     <label class="form-label">Сумма бонуса</label>
                     <div class="input-group">
                         <span class="input-group-text">₽</span>
-                        <input type="number" name="bonus_amount" class="form-control" value="{{ $settings['bonus_amount'] ?? 100 }}" min="1">
+                        <input type="number" name="bonus_amount" class="form-control" value="{{ is_array($settings['bonus_amount'] ?? null) ? 100 : ($settings['bonus_amount'] ?? 100) }}" min="1">
                     </div>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Количество дней</label>
-                    <input type="number" name="days_count" class="form-control" value="{{ $settings['days_count'] ?? 7 }}" min="3" max="30">
+                    <input type="number" name="days_count" class="form-control" value="{{ is_array($settings['days_count'] ?? null) ? 7 : ($settings['days_count'] ?? 7) }}" min="3" max="30">
                 </div>
-                <div class="alert alert-info">За цикл: <strong class="text-success">{{ ($settings['bonus_amount'] ?? 100) * ($settings['days_count'] ?? 7) }} ₽</strong></div>
+                <div class="alert alert-info">За цикл: <strong class="text-success">{{ (is_array($settings['bonus_amount'] ?? null) ? 100 : ($settings['bonus_amount'] ?? 100)) * (is_array($settings['days_count'] ?? null) ? 7 : ($settings['days_count'] ?? 7)) }} ₽</strong></div>
             </div>
 
             <div id="tab-rewards" class="tab-pane">
@@ -28,7 +28,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Награды по дням (JSON)</label>
-                    <textarea name="day_rewards" class="form-control font-monospace" rows="3">{{ $settings['day_rewards'] ?? '{"1":100,"2":100,"3":100,"4":100,"5":100,"6":100,"7":100}' }}</textarea>
+                    <textarea name="day_rewards" class="form-control font-monospace" rows="3">{{ is_array($settings['day_rewards'] ?? null) ? '{"1":100,"2":100,"3":100,"4":100,"5":100,"6":100,"7":100}' : ($settings['day_rewards'] ?? '{"1":100,"2":100,"3":100,"4":100,"5":100,"6":100,"7":100}') }}</textarea>
                     <div class="mt-1">
                         <button type="button" class="btn btn-sm btn-outline-secondary me-1" onclick="setRewardPreset('classic')">Одинаковый</button>
                         <button type="button" class="btn btn-sm btn-outline-secondary me-1" onclick="setRewardPreset('growth')">Растущий</button>
