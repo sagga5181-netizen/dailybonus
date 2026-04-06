@@ -10,6 +10,7 @@ use Cycle\Annotated\Annotation\Table\Index;
 #[Entity(table: 'dailybonus_history')]
 #[Table(indexes: [
     new Index(columns: ['user_id', 'claimed_at']),
+    new Index(columns: ['user_id', 'cycle_count']),
 ])]
 class UserBonus
 {
@@ -24,6 +25,15 @@ class UserBonus
 
     #[Column(type: 'integer')]
     public int $day_number;
+
+    #[Column(type: 'integer')]
+    public int $cycle_count;
+
+    #[Column(type: 'string')]
+    public string $reward_type;
+
+    #[Column(type: 'string', nullable: true)]
+    public ?string $reward_item;
 
     #[Column(type: 'datetime')]
     public string $claimed_at;

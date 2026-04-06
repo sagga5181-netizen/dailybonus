@@ -3,16 +3,29 @@
         <div class="tab-header">
             <button type="button" class="tab-link active" onclick="switchTab(this, 'tab-general')">Основные</button>
             <button type="button" class="tab-link" onclick="switchTab(this, 'tab-rewards')">Награды</button>
+            <button type="button" class="tab-link" onclick="switchTab(this, 'tab-cycle')">Цикл</button>
             <button type="button" class="tab-link" onclick="switchTab(this, 'tab-display')">Оформление</button>
         </div>
         <div class="tab-content">
             <div id="tab-general" class="tab-pane active">
                 <div class="mb-3">
-                    <label class="form-label">Базовый бонус (множитель × день)</label>
+                    <label class="form-label">Базовый бонус</label>
                     <div class="input-group">
                         <span class="input-group-text">₽</span>
                         <input type="number" name="bonus_amount" class="form-control" value="{{ is_array($settings['bonus_amount'] ?? null) ? 100 : ($settings['bonus_amount'] ?? 100) }}" min="1">
                     </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Тип награды</label>
+                    <select name="reward_type" class="form-control">
+                        <option value="balance" {{ ($settings['reward_type'] ?? 'balance') === 'balance' ? 'selected' : '' }}>Баланс (₽)</option>
+                        <option value="coins" {{ ($settings['reward_type'] ?? 'balance') === 'coins' ? 'selected' : '' }}>Монеты</option>
+                        <option value="points" {{ ($settings['reward_type'] ?? 'balance') === 'points' ? 'selected' : '' }}>Поинты</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Количество дней в цикле</label>
+                    <input type="number" name="days_count" class="form-control" value="{{ is_array($settings['days_count'] ?? null) ? 7 : ($settings['days_count'] ?? 7) }}" min="1" max="30">
                 </div>
                 <div class="alert alert-info">За цикл: <strong class="text-success" id="total-cycle">0</strong> ₽</div>
             </div>
@@ -25,6 +38,22 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     Добавить день
                 </button>
+            </div>
+
+            <div id="tab-cycle" class="tab-pane">
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" name="cycle_enabled" id="cycle_enabled" {{ ($settings['cycle_enabled'] ?? true) ? 'checked' : '' }}>
+                    <label class="form-check-label" for="cycle_enabled">Цикличность (сброс после N дней)</label>
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" name="reset_on_miss" id="reset_on_miss" {{ ($settings['reset_on_miss'] ?? true) ? 'checked' : '' }}>
+                    <label class="form-check-label" for="reset_on_miss">Сбросить прогресс если пропущен день</label>
+                </div>
+                <div class="alert alert-info">
+                    <strong>Как это работает:</strong><br>
+                    ☑ Цикличность — после N дней прогресс начнётся сначала<br>
+                    ☑ Сброс при пропуске — если игрок не зайдёт 2 дня, прогресс начнётся сначала
+                </div>
             </div>
 
             <div id="tab-display" class="tab-pane">
