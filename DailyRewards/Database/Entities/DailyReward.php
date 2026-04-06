@@ -3,7 +3,7 @@
 namespace Flute\Modules\DailyRewards\Database\Entities;
 
 use Flute\Core\Database\Entities\BaseEntity;
-use Cycle\Annotated\Annotation\Column;
+
 use Cycle\Annotated\Annotation\Column;
 
 #[Entity(table: 'daily_rewards')]
