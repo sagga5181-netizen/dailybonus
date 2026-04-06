@@ -19,7 +19,10 @@ class DailyBonusController extends BaseController
         }
 
         $userId = user()->id;
-        $lastBonus = UserBonus::findOne(['user_id' => $userId], ['orderBy' => ['claimed_at' => 'DESC']]);
+        $repository = orm()->getRepository(UserBonus::class);
+        $lastBonus = $repository->findOne(['user_id' => $userId], [
+            'orderBy' => ['claimed_at' => 'DESC']
+        ]);
 
         if ($lastBonus) {
             $lastClaimDate = new \DateTime($lastBonus->claimed_at);

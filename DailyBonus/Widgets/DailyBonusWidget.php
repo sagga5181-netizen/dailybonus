@@ -104,7 +104,12 @@ class DailyBonusWidget implements WidgetInterface
         }
 
         $userId = user()->id;
-        $lastBonus = UserBonus::findOne(['user_id' => $userId], ['orderBy' => ['claimed_at' => 'DESC']]);
+        
+        // Используем orm()->getRepository()
+        $repository = orm()->getRepository(UserBonus::class);
+        $lastBonus = $repository->findOne(['user_id' => $userId], [
+            'orderBy' => ['claimed_at' => 'DESC']
+        ]);
 
         $canClaim = true;
         $nextClaimTime = null;
@@ -124,7 +129,7 @@ class DailyBonusWidget implements WidgetInterface
             $currentDay = $lastBonus->day_number + 1;
         }
 
-        $allBonuses = UserBonus::findAll(['user_id' => $userId]);
+        $allBonuses = $repository->findAll(['user_id' => $userId]);
         $totalClaimed = 0;
         foreach ($allBonuses as $bonus) {
             $totalClaimed += $bonus->amount;
