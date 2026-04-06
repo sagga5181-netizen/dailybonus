@@ -99,7 +99,7 @@ class DailyRewardsWidget implements WidgetInterface
             'canClaim' => $canClaim,
             'rewards' => $rewards,
             'currentReward' => $currentReward,
-        ]);
+        ])->render();
     }
 
     public function validateSettings(array $input): true|array
