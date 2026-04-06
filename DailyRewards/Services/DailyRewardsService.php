@@ -64,7 +64,7 @@ class DailyRewardsService
      */
     public function setConfig(string $key, $value): void
     {
-        $config = DailyRewardConfig::where('key', $key)->first();
+        $config = DailyRewardConfig::query()->where('key', $key)->fetchOne();
 
         if ($config) {
             $config->value = $value;
@@ -84,13 +84,13 @@ class DailyRewardsService
      */
     public function getRewards(bool $activeOnly = false)
     {
-        $query = DailyReward::orderBy('day_number', 'ASC');
+        $query = DailyReward::query()->orderBy('day_number', 'ASC');
 
         if ($activeOnly) {
             $query->where('is_active', true);
         }
 
-        return $query->all();
+        return $query->fetchAll();
     }
 
     /**
@@ -98,9 +98,10 @@ class DailyRewardsService
      */
     public function getRewardByDay(int $dayNumber): ?DailyReward
     {
-        return DailyReward::where('day_number', $dayNumber)
+        return DailyReward::query()
+            ->where('day_number', $dayNumber)
             ->where('is_active', true)
-            ->first();
+            ->fetchOne();
     }
 
     /**
@@ -108,7 +109,7 @@ class DailyRewardsService
      */
     public function saveReward(array $data): void
     {
-        $reward = DailyReward::where('day_number', $data['day_number'])->first();
+        $reward = DailyReward::query()->where('day_number', $data['day_number'])->fetchOne();
 
         if ($reward) {
             $reward->update($data);
@@ -122,7 +123,7 @@ class DailyRewardsService
      */
     public function deleteReward(int $dayNumber): void
     {
-        DailyReward::where('day_number', $dayNumber)->delete();
+        DailyReward::query()->where('day_number', $dayNumber)->delete();
     }
 
     /**
@@ -130,7 +131,7 @@ class DailyRewardsService
      */
     public function getUserProgress(int $userId): ?DailyRewardUser
     {
-        $progress = DailyRewardUser::where('user_id', $userId)->first();
+        $progress = DailyRewardUser::query()->where('user_id', $userId)->fetchOne();
 
         if (!$progress) {
             $progress = DailyRewardUser::create([
@@ -306,9 +307,10 @@ class DailyRewardsService
      */
     public function getUserHistory(int $userId, int $limit = 30): array
     {
-        return DailyRewardHistory::where('user_id', $userId)
+        return DailyRewardHistory::query()
+            ->where('user_id', $userId)
             ->orderBy('claimed_at', 'DESC')
             ->limit($limit)
-            ->all();
+            ->fetchAll();
     }
 }
