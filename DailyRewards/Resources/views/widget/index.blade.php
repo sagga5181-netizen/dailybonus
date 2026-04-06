@@ -159,7 +159,7 @@
 
 <script>
 function claimDailyReward(day) {
-    fetch('{{ route("api.dailyreward.claim") }}', {
+    fetch('/api/dailyreward/claim', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
