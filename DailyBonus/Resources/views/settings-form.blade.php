@@ -1,10 +1,10 @@
 <div class="daily-bonus-settings-form">
     <div class="setting-tabs">
         <div class="tab-header">
-            <button type="button" class="tab-link active" data-tab="tab-general">Основные</button>
-            <button type="button" class="tab-link" data-tab="tab-rewards">Награды</button>
-            <button type="button" class="tab-link" data-tab="tab-cycle">Цикл</button>
-            <button type="button" class="tab-link" data-tab="tab-display">Оформление</button>
+            <button type="button" class="tab-link active" data-tab="tab-general" onclick="switchTab(this, 'tab-general')">Основные</button>
+            <button type="button" class="tab-link" data-tab="tab-rewards" onclick="switchTab(this, 'tab-rewards')">Награды</button>
+            <button type="button" class="tab-link" data-tab="tab-cycle" onclick="switchTab(this, 'tab-cycle')">Цикл</button>
+            <button type="button" class="tab-link" data-tab="tab-display" onclick="switchTab(this, 'tab-display')">Оформление</button>
         </div>
         <div class="tab-content">
             <div id="tab-general" class="tab-pane active">
@@ -399,6 +399,23 @@ $jsonDayRewards = json_encode($dayRewards ?: array_fill(1, max(7, (int)$daysCoun
 </style>
 
 <script>
+function switchTab(btn, tabId) {
+    var form = btn.closest('.daily-bonus-settings-form');
+    if (!form) return;
+    
+    var tabs = form.querySelectorAll('.tab-link');
+    var panes = form.querySelectorAll('.tab-pane');
+    
+    tabs.forEach(function(t) { t.classList.remove('active'); });
+    panes.forEach(function(p) { p.classList.remove('active'); });
+    
+    btn.classList.add('active');
+    var targetPane = document.getElementById(tabId);
+    if (targetPane) {
+        targetPane.classList.add('active');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Tab switching
     var tabLinks = document.querySelectorAll('.daily-bonus-settings-form .tab-link');
