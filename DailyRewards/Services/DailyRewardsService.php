@@ -34,7 +34,7 @@ class DailyRewardsService
      */
     private function loadConfig(): void
     {
-        $configs = DailyRewardConfig::all();
+        $configs = DailyRewardConfig::findAll();
         
         foreach ($configs as $config) {
             $this->config[$config->key] = $config->value;
