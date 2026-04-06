@@ -109,7 +109,7 @@ class DailyRewardsWidget implements WidgetInterface
 
     public function hasSettings(): bool
     {
-        return false;
+        return true;
     }
 
     public function getButtons(): array
