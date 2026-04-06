@@ -23,8 +23,8 @@ class DailyRewardsServiceProvider extends ModuleServiceProvider
         // Load SCSS styles
         $this->loadScss('Resources/assets/scss/daily-rewards.scss');
 
-        // Load routes from file
-        $this->loadRoutesFrom('Routes/web.php');
+        // Load routes
+        require $this->getModulePath('Routes/web.php');
 
         // Load views
         $this->loadViews('Resources/views', 'dailyrewards');
