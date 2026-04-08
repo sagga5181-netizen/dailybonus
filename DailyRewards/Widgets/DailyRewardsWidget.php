@@ -35,6 +35,8 @@ class DailyRewardsWidget implements WidgetInterface
         
         ob_start();
         ?>
+        <form method="POST">
+        @csrf
         <ul class="nav nav-tabs mb-3" id="widgetSettingsTabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab">Общие настройки</button>
@@ -125,31 +127,11 @@ class DailyRewardsWidget implements WidgetInterface
         
         </div>
         
-        <style>
-        #save-rewards-btn {
-            position: relative;
-            z-index: 99999;
-            pointer-events: all !important;
-            cursor: pointer !important;
-        }
-        </style>
-        
         <div class="mt-3">
-            <button id="save-rewards-btn" type="button" class="btn btn-success">💾 Сохранить награды</button>
+            <button type="submit" class="btn btn-success">💾 Сохранить награды</button>
         </div>
         
         <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const btn = document.getElementById('save-rewards-btn');
-            if (btn) {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    saveRewards();
-                    return false;
-                });
-            }
-        });
         function addNewReward() {
             const dayNumber = document.querySelectorAll(".reward-item").length + 1;
             const html = `
@@ -225,6 +207,7 @@ class DailyRewardsWidget implements WidgetInterface
             });
         }
         </script>
+        </form>
         <?php
         return ob_get_clean();
     }
@@ -313,6 +296,48 @@ class DailyRewardsWidget implements WidgetInterface
 
     public function saveSettings(array $input): array
     {
+        // Handle rewards saving
+        if (isset($input['rewards']) && is_array($input['rewards'])) {
+            $existingIds = [];
+
+            foreach ($input['rewards'] as $rewardData) {
+                if (!empty($rewardData['id'])) {
+                    $reward = \Flute\Modules\DailyRewards\Database\Entities\DailyReward::query()->where('id', $rewardData['id'])->fetchOne();
+                    if ($reward) {
+                        $reward->dayNumber = (int) $rewardData['dayNumber'];
+                        $reward->name = $rewardData['name'] ?? null;
+                        $reward->description = $rewardData['description'] ?? null;
+                        $reward->image = $rewardData['image'] ?? null;
+                        $reward->balance = (float) ($rewardData['balance'] ?? 0);
+                        $reward->isActive = (bool) ($rewardData['isActive'] ?? false);
+                        $reward->save();
+
+                        $existingIds[] = $reward->id;
+                    }
+                } else {
+                    if (!empty($rewardData['dayNumber'])) {
+                        $reward = new \Flute\Modules\DailyRewards\Database\Entities\DailyReward();
+                        $reward->dayNumber = (int) $rewardData['dayNumber'];
+                        $reward->name = $rewardData['name'] ?? null;
+                        $reward->description = $rewardData['description'] ?? null;
+                        $reward->image = $rewardData['image'] ?? null;
+                        $reward->balance = (float) ($rewardData['balance'] ?? 0);
+                        $reward->isActive = (bool) ($rewardData['isActive'] ?? true);
+                        $reward->save();
+
+                        $existingIds[] = $reward->id;
+                    }
+                }
+            }
+
+            // Delete removed rewards
+            if (!empty($existingIds)) {
+                \Flute\Modules\DailyRewards\Database\Entities\DailyReward::query()
+                    ->whereNotIn('id', $existingIds)
+                    ->delete();
+            }
+        }
+
         return [
             'title' => $input['title'] ?? 'Ежедневные бонусы',
             'show_streak' => (bool) ($input['show_streak'] ?? false),
