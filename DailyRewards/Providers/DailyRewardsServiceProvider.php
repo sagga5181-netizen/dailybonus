@@ -21,9 +21,13 @@ class DailyRewardsServiceProvider extends ModuleServiceProvider
         $this->loadWidgets();
 
         // Load API routes
-        $this->loadRoutesFrom('Routes/api.php');
+        if (file_exists(__DIR__ . '/../Routes/api.php')) {
+            $this->loadRoutesFrom('Routes/api.php');
+        }
 
         // Load admin routes (for module settings page)
-        $this->loadRoutesFrom('Routes/admin.php');
+        if (file_exists(__DIR__ . '/../Routes/admin.php')) {
+            $this->loadRoutesFrom('Routes/admin.php');
+        }
     }
 }

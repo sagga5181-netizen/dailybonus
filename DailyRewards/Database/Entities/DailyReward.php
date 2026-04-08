@@ -21,6 +21,12 @@ class DailyReward extends ActiveRecord
     #[Column(type: 'decimal', precision: 10, scale: 2)]
     public float $balance = 0;
 
+    #[Column(type: 'string', nullable: true)]
+    public ?string $name = null;
+
+    #[Column(type: 'text', nullable: true)]
+    public ?string $description = null;
+
     #[Column(type: 'bool')]
     public bool $isActive = true;
 }

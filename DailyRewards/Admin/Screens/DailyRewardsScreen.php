@@ -29,9 +29,11 @@ class DailyRewardsScreen extends Screen
     {
         return Table::make('daily_rewards')
             ->columns([
-                'day' => 'День',
+                'dayNumber' => 'День',
+                'name' => 'Название',
                 'image' => 'Изображение',
                 'balance' => 'Баланс',
+                'isActive' => 'Активно',
                 'actions' => '',
             ])
             ->data($rewards)
@@ -46,16 +48,21 @@ class DailyRewardsScreen extends Screen
             $reward = DailyReward::query()->where('id', $data['id'])->fetchOne();
             if ($reward) {
                 $reward->dayNumber = $data['dayNumber'];
+                $reward->name = $data['name'];
+                $reward->description = $data['description'];
                 $reward->image = $data['image'];
                 $reward->balance = $data['balance'];
+                $reward->isActive = (bool) ($data['isActive'] ?? false);
                 $reward->save();
             }
         } else {
             $reward = new DailyReward();
             $reward->dayNumber = $data['dayNumber'];
+            $reward->name = $data['name'];
+            $reward->description = $data['description'];
             $reward->image = $data['image'];
             $reward->balance = $data['balance'];
-            $reward->isActive = true;
+            $reward->isActive = (bool) ($data['isActive'] ?? true);
             $reward->save();
         }
 
