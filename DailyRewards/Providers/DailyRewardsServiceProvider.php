@@ -10,7 +10,10 @@ class DailyRewardsServiceProvider extends ModuleServiceProvider
 
     public function boot(\DI\Container $container): void
     {
-        // Use bootstrapModule to auto-load everything
+        // Auto-load module resources
         $this->bootstrapModule();
+        
+        // Load views with namespace
+        $this->loadViews('Resources/views', 'dailyrewards');
     }
 }
