@@ -18,11 +18,5 @@ class DailyRewardsServiceProvider extends ModuleServiceProvider
 
         // Load widgets
         $this->loadWidgets();
-
-        // Load API routes
-        $this->loadRoutesFrom('Routes/api.php');
-
-        // Load admin routes
-        $this->loadRoutesFrom('Routes/admin.php');
     }
 }
